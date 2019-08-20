@@ -1,4 +1,6 @@
+
 #include "texture.h"
+
 texture::texture(const std::string &path)
 {
 try
@@ -9,10 +11,13 @@ try
 }
 catch (int )
 {
-
-	//MessageBoxA(NULL, "resource not found","Error!", MB_ICONEXCLAMATION | MB_OK);
+#ifdef _WIN32
+	MessageBoxA(NULL, "resource not found","Error!", MB_ICONEXCLAMATION | MB_OK);
+	exit(1);
+#elif __linux__	
 	std::cerr<<"file not found";
-	
+	exit(1);
+#endif
 }
 
 	}

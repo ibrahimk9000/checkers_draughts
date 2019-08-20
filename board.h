@@ -1,13 +1,13 @@
 #pragma once
-#include "texture.h"
+//#include "texture.h"
 #include <vector>
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
 #include <string>
 #include <iostream>
-class player;
-extern const float x[8];
-extern const float y[8];
+//class player;
+extern const float G_xcord[8];
+extern const float G_ycord[8];
 class board
 {
 private:

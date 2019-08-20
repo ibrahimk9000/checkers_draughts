@@ -1,6 +1,6 @@
 
 #include "pawns.h"
-#include "players.h"
+
 #include <cstdlib>
 int pawns::id_rd = 0;
 
@@ -43,16 +43,16 @@ void pawns::position(int offsetblue,int offsetred)
 	{
 		x_cord = id % 4 * 2 + offsetblue;
 		y_cord = id / 4 + player_id;
-		circle.setPosition(x[x_cord], y[y_cord]);
-		squareborder.setPosition(x[x_cord], y[y_cord]);
+		circle.setPosition(G_xcord[x_cord], G_ycord[y_cord]);
+		squareborder.setPosition(G_xcord[x_cord], G_ycord[y_cord]);
 	}
 	else 
 	{
 		x_cord = id % 4 * 2 + offsetred;
 		y_cord = id / 4 + player_id;
-	  circle.setPosition(x[x_cord], y[y_cord]);
+	  circle.setPosition(G_xcord[x_cord], G_ycord[y_cord]);
 	 
-	  squareborder.setPosition(x[x_cord], y[y_cord]);
+	  squareborder.setPosition(G_xcord[x_cord], G_ycord[y_cord]);
     }
 
 }
@@ -92,11 +92,14 @@ void pawns::moveforward(sf::Vector2i coor)
 	x_cord = coor.x;
 	y_cord = coor.y;
 	id_cord = pawnmove{ id, x_cord, y_cord };
-	circle.setPosition(x[x_cord], y[y_cord]);
-	squareborder.setPosition(x[x_cord], y[y_cord]);
+	circle.setPosition(G_xcord[x_cord], G_ycord[y_cord]);
+	squareborder.setPosition(G_xcord[x_cord], G_ycord[y_cord]);
 	
 }
+void pawns::transform() 
+{
 
+}
 void pawns::dell()
 {
 	x_cord = -1;

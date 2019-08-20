@@ -42,18 +42,18 @@ void board::position(int black, int white)
 	{
 	x_cord = id % 4 * 2 + white;  //white offset coordinate
 	y_cord = id / 4;
-	square.setPosition(x[x_cord], y[y_cord]);
+	square.setPosition(G_xcord[x_cord], G_ycord[y_cord]);
 	
     }
 	else 
 	{
 	x_cord = id % 4 * 2 + black;
 	y_cord = id / 4;
-	square.setPosition(x[x_cord], y[y_cord]);
+	square.setPosition(G_xcord[x_cord], G_ycord[y_cord]);
 	
 	}
 	if (black == 1)
-		square_path.setPosition(x[x_cord], y[y_cord]);
+		square_path.setPosition(G_xcord[x_cord], G_ycord[y_cord]);
 }
 			
 sf::Vector2i board::cord()

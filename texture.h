@@ -1,9 +1,13 @@
 #pragma once
-#include <vector>
+
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
 #include <string>
+#ifdef _WIN32
+#include <windows.h>
+#elif __linux__
 #include <iostream>
+#endif
 class texture
 {
 private:

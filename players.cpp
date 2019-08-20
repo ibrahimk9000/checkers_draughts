@@ -1,20 +1,17 @@
 #include "players.h"
-#include <cstdlib>
-#include <iostream>
 
 player::player(int plyr, sf::Texture *texture,sf::Texture *text) :player_id(plyr) 
 {
 	for (int i = 0; i < PAWN_NUMBER; ++i)
 	{
 		player_pawn.push_back(pawns(plyr, texture,text));  //initialise vector of pawns
-		array_pawn.resize(12);
+		
 		if (player_id == 5)
 		{
-			array_pawn[i] = player_pawn[i].struct_id();
+			
 			base = 7;
 		}
 		else {
-			array_pawn[i] = player_pawn[i].struct_id();
 			base = 0;
 		}
 
@@ -43,32 +40,25 @@ void player::status(player* opp)
 	//symmetry();
 	for (int i = 0; i < PAWN_NUMBER; ++i)
 	{
-		if (array_pawn[i].id < 12)
+		if ( player_pawn[i].struct_id().id < 12)
 		{
 			indexxx = i;
 			if (player_pawn[i].kings() == true)
 			{
-				
-				
-				rightright(array_pawn[i], true, 0);
-				leftleft(array_pawn[i], true, 0);
+				rightright( player_pawn[i].struct_id(), true, 0);
+				leftleft( player_pawn[i].struct_id(), true, 0);
 				magic = magic * (-1);
-				//	checkrightking(array_pawn[index], 0);
-					//checkleftking(array_pawn[index], 0);
-				rightright(array_pawn[i], true, 0);
-				leftleft(array_pawn[i], true, 0);
+
+				rightright( player_pawn[i].struct_id(), true, 0);
+				leftleft( player_pawn[i].struct_id(), true, 0);
 				magic = magic * (-1);
 
 			}
 			else {
-				
-				
 			//check pawns statis right and left path possibilities
-				rightright(array_pawn[i], false, 0);
-				leftleft(array_pawn[i], false, 0);
-		}
-
-			
+				rightright( player_pawn[i].struct_id(), false, 0);
+				leftleft( player_pawn[i].struct_id(), false, 0);
+	         	}
 		}
 		
 	}
@@ -83,9 +73,9 @@ int player::emptyright(pawnmove right,int eatflag) //eatflag can be 0 or 1 to ad
 	for (int i = 0; i < PAWN_NUMBER; ++i)
 	{
 	
-	if (right.x - magic-eatflag == player2->array_pawn[i].x && right.y + magic+eatflag == player2->array_pawn[i].y)
+	if (right.x - magic-eatflag == player2-> player_pawn[i].struct_id().x && right.y + magic+eatflag == player2-> player_pawn[i].struct_id().y)
 		return i;
-	if (right.x - magic-eatflag == array_pawn[i].x && right.y + magic+eatflag == array_pawn[i].y )
+	if (right.x - magic-eatflag ==  player_pawn[i].struct_id().x && right.y + magic+eatflag ==  player_pawn[i].struct_id().y )
 		return -1;
 	    
 }
@@ -96,9 +86,9 @@ int player::emptyleft(pawnmove right,int eatflag)
 	for (int i = 0; i < PAWN_NUMBER; ++i)
 	{
 
-		if (right.x + magic+eatflag == player2->array_pawn[i].x && right.y + magic+eatflag == player2->array_pawn[i].y)
+		if (right.x + magic+eatflag == player2-> player_pawn[i].struct_id().x && right.y + magic+eatflag == player2-> player_pawn[i].struct_id().y)
 			return i;
-		if (right.x + magic+eatflag == array_pawn[i].x && right.y + magic+eatflag == array_pawn[i].y)
+		if (right.x + magic+eatflag ==  player_pawn[i].struct_id().x && right.y + magic+eatflag ==  player_pawn[i].struct_id().y)
 			return -1;
 		
 	}
@@ -110,12 +100,14 @@ bool player::borderleft(pawnmove left,int eatflag)
 {      
 	if (left.x + magic+eatflag > 7 || left.x + magic + eatflag < 0 || left.y + magic+eatflag > 7 || left.y + magic + eatflag < 0)
 		return false;
+
 		return true;
 }
 bool player::borderright(pawnmove right,int eatflag) 
 {
 	if (right.x - magic-eatflag < 0 || right.x - magic - eatflag > 7 || right.y + magic+eatflag > 7 || right.y + magic + eatflag < 0)
 		return false;
+
 		return true;
 }
 
@@ -123,17 +115,12 @@ bool player::movelegal(int idd,sf::Vector2i coor)
 {
 	
 	if (multieat!=idd && multieat>0)
-
 		return false;
-	
-	
-	
-	if (legalmove_id(idd) == true)
-	
+
+	if (legalmove_id(idd) == true)	
 		return mv(idd, coor);
 	
-		return false;// 
-
+		
 }
 bool player::mv(int idd, sf::Vector2i coor) {
 	int x, y;
@@ -148,14 +135,12 @@ bool player::mv(int idd, sf::Vector2i coor) {
 		if (elem.opponentid >= 0)
 			mag = 1;
 		if (elem.eatstatus == 1)
-			begin = cfour;
+			begin = player_pawn[idd].cfour;
 		x = begin.x-end.x;
 		
 		y = begin.y - end.y;
-		if (elem.eatstatus==0|| elem.eatstatus == 1) {
-
-		
-
+		if (elem.eatstatus==0|| elem.eatstatus == 1) 
+		{
 
 			if (x < 0) {
 				if (coor.x > begin.x+mag && coor.x <= end.x)
@@ -181,26 +166,22 @@ bool player::mv(int idd, sf::Vector2i coor) {
 
 			}
 
-
-			
 		}
 	
 		if   (elem.eatstatus >=2 ) 
-			{
-
-				
-		if (coor.x == elem.end.x && coor.y == elem.end.y) {
-			pathmove = elem;
+			{				
+		     if (coor.x == elem.end.x && coor.y == elem.end.y) 
+			 {
+		    	pathmove = elem;
 			if (elem.eatstatus == 3)
 				multieat = idd;
-			return true;
-		}
+
+			   return true;
+	    	}
 
 	}
 }
-
-
-		return false;
+	return false;
 }
 
 
@@ -215,11 +196,9 @@ void player::movepawn(int idd, sf::Vector2i cord)
 			if (pathmove.opponentid>=0)
 			player2->deletepawn(pathmove.opponentid);
 			player_pawn[idd].moveforward(cord);
-			array_pawn[idd] = player_pawn[idd].struct_id();
 			if (std::abs(player_pawn[idd].struct_id().y - base) == 7)
 				transform(idd);
-			
-		
+	
 	}
 ////////////////
 void player::deletepawn(int x)
@@ -231,7 +210,6 @@ void player::deletepawn(int x)
 	}
 	
 				player_pawn[i].dell();
-				array_pawn[i] = player_pawn[i].struct_id();
 			
 }
 void player::enable(bool status)
@@ -253,11 +231,10 @@ std::vector<pawns> &player::vect_pawn()
 
 bool player::legalmove_id(int idd)
 {
+  if (!player_pawn[idd].path_pawnn.empty())
+  return true;
 	
-			if (!player_pawn[idd].path_pawnn.empty())
-				return true;
-	
-	return false;
+  return false;
 
 }
 
@@ -300,6 +277,7 @@ void player::transform(int index)
 {
 	//change texture
 	player_pawn[index].setking(true);
+	player_pawn[index].transform();
 	
 }
 
@@ -385,7 +363,7 @@ bool player::rightright(pawnmove array_pawnn, bool bflag,int flag = 0)
 				flag = 0;
 				holdid = i;
 				banned.push_back(i);
-				cfour = array_pawnn;
+				player_pawn[indexxx].cfour = array_pawnn;
 				eatright(array_pawnn, i);
 				
 				eat = true;
@@ -412,14 +390,15 @@ bool player::rightright(pawnmove array_pawnn, bool bflag,int flag = 0)
 						player_pawn[indexxx].path_pawn(path{ beginpath,array_pawnn,holdid,3 });
 					}
 					magic = magic * (-1);
+					if (bannedd == 0)
+						banned.clear();
 				}
 			}
 			//flag = 1;
 			
 		}
 		
-		if (bannedd==0)
-		banned.clear();
+		
 		return eat;
 		}
 	bool player::leftleft(pawnmove array_pawnn,bool bflag, int flag = 0)
@@ -494,7 +473,7 @@ bool player::rightright(pawnmove array_pawnn, bool bflag,int flag = 0)
 				flag = 0;
 				holdid = i;
 				banned.push_back(i);
-				cfour = array_pawnn;
+				player_pawn[indexxx].cfour = array_pawnn;
 				eatleft(array_pawnn, i);
 				
 				eat = true;
@@ -523,12 +502,13 @@ bool player::rightright(pawnmove array_pawnn, bool bflag,int flag = 0)
 					}
 					magic = magic * (-1);
 				}
+				if (bannedd == 0)
+					banned.clear();
 			}
 			//flag = 1;
 
 		}
-		if (bannedd==0)
-		banned.clear();
+		
 		return eat;
 
 		}
@@ -570,14 +550,14 @@ bool player::rightright(pawnmove array_pawnn, bool bflag,int flag = 0)
 			return -1;
 		if (i >= 0)
 		{
-			if (checkbanned(player2->array_pawn[i].id) == true)
+			if (checkbanned(player2-> player_pawn[i].struct_id().id) == true)
 			return -2;
 			if (emptyright(array_pawnn, magic) == -2 && borderright(array_pawnn, magic))
-				return player2->array_pawn[i].id;
+				return player2-> player_pawn[i].struct_id().id;
 		
 				return -1;
 		}
-	
+		return -1;
 	}
 	int player::auraleft(pawnmove array_pawnn)
 	{ 
@@ -592,15 +572,15 @@ bool player::rightright(pawnmove array_pawnn, bool bflag,int flag = 0)
 			return -1;
 		if (i >= 0)
 		{
-			if (checkbanned(player2->array_pawn[i].id) == true)
+			if (checkbanned(player2-> player_pawn[i].struct_id().id) == true)
 			return -2;
 		
 			if (emptyleft(array_pawnn, magic) == -2 && borderleft(array_pawnn, magic))
-				return player2->array_pawn[i].id;
+				return player2-> player_pawn[i].struct_id().id;
 
 			return -1;
 		}
-
+		return -1;
 	}
 	
 	bool player::checkbanned(int i) {

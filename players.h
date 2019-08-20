@@ -4,6 +4,9 @@
 #include <SFML/Graphics.hpp>
 #include <string>
 #include <iostream>
+#include <cstdlib>
+#include <iostream>
+
 #include "pawns.h"
 
 
@@ -16,8 +19,8 @@ private:
 	path pathmove;
 	pawnmove beginpath;
 	pawnmove endpath;
-	pawnmove end;
-	pawnmove cfour;
+	
+	
 	int base;
 	int player_id;
 	bool active_status;
@@ -26,7 +29,6 @@ private:
 	player *player2;
 	
 	int multieat=-1;
-	int multieatid;
 	int path_move;
 	
 	bool king = false;
@@ -35,7 +37,6 @@ private:
 	std::vector<int> banned;
 
 public:
-	std::vector<pawnmove> array_pawn;
 	std::vector<pawns> player_pawn;
 	player();
 	player(int plyr, sf::Texture *texture, sf::Texture *text);

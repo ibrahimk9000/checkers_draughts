@@ -4,7 +4,8 @@
 #include <vector>
 #include <SFML/Window.hpp>
 #include <iostream>
-#include "pawns.h"
+#include "texture.h"
+
 #include "board.h"
 #include "players.h"
 #include "stdint.h"
