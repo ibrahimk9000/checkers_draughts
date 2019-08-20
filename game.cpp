@@ -1,7 +1,4 @@
 
-#define PLAYER_ONE 0
-#define PLAYER_TWO 5
-#define PAWN_NUMBER 12
 #include "game.h"
 //  board square  100x100  coordinate in window 800x800
 // pawn circle 50 diameter
@@ -13,37 +10,18 @@ Game::Game():window(sf::VideoMode(800, 800), "Checkers") {};
 
 void Game::run() {
 	window.setFramerateLimit(40);
-#ifdef _WIN32
-texture tex("d:\\classic-piece-black.png");    // load texture
-texture tex1("d:\\classic-square-white.png");
-texture tex4("d:\\borderr.png");
-texture tex5("d:\\vector-frame-png-transparent-images-150122-33546554.png");
-texture tex2("d:\\fire.png");
-texture tex3("d:\\blue.png");
-texture tex6("d:\\fire_king.png");
-texture tex7("d:\\blue_king.png");
-#endif
-#ifdef __linux__
-texture tex("/home/ibrahim/checker/classic-piece-black.png");    // load texture
-texture tex1("/home/ibrahim/checker/classic-square-white.png");
-texture tex4("/home/ibrahim/checker/borderr.png");
-texture tex5("/home/ibrahim/checker/vector-frame-png-transparent-images-150122-33546554.png");
-texture tex2("/home/ibrahim/checker/fire.png");
-texture tex3("/home/ibrahim/checker/blue.png");
-texture tex6("d:\\fire_king.png");
-texture tex7("d:\\blue_king.png");
-#endif
+
 for (int i = 0; i < 32; ++i) {
 	//initialise vector of 32 board black and white 
-	boardwhite.push_back(board(0, tex1.map(),nullptr));    //param 0 and  for positioning 
-	boardblack.push_back(board(1, tex.map(),tex5.map()));
+	boardwhite.push_back(board(0));    //param 0 and  for positioning 
+	boardblack.push_back(board(1));
 }
 
 
 
 //inistialise players  
-playertwo = player(PLAYER_TWO, tex3.map(), tex4.map());
- playerone=player(PLAYER_ONE, tex2.map(),tex4.map());
+playertwo = player(PLAYER_TWO);
+ playerone=player(PLAYER_ONE);
  
 
  Game::events();

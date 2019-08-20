@@ -9,6 +9,7 @@
 #include "board.h"
 #include "players.h"
 #include "stdint.h"
+
 class Game
 {
 

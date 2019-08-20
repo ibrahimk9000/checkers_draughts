@@ -4,13 +4,8 @@
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
 #include <string>
-#include <iostream>
+#include "texture.h"
 
-//#include "board.h"
-
-#define PAWN_NUMBER 12
-#define PLAYER_ONE 0
-#define PLAYER_TWO 5
 extern const float G_xcord[8];
 extern const float G_ycord[8];
 struct pawnmove {
@@ -51,6 +46,7 @@ public:
 	sf::RectangleShape & displayborder();
 	
 	int get_id();
+	pawns(int redorblue);
 	pawnmove &struct_id();
 	void position(int offsetblue, int offsetred);
 	void move(int movex,int movey);
@@ -64,11 +60,4 @@ public:
 	bool kings();
 
 	bool path_pawn(path s);
-
-
-	
-	
-	//void symmetry();
-
-
 };

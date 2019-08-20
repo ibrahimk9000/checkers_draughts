@@ -1,10 +1,10 @@
 #include "players.h"
 
-player::player(int plyr, sf::Texture *texture,sf::Texture *text) :player_id(plyr) 
+player::player(int plyr) :player_id(plyr) 
 {
 	for (int i = 0; i < PAWN_NUMBER; ++i)
 	{
-		player_pawn.push_back(pawns(plyr, texture,text));  //initialise vector of pawns
+		player_pawn.push_back(pawns(plyr));  //initialise vector of pawns
 		
 		if (player_id == 5)
 		{
@@ -40,6 +40,8 @@ void player::status(player* opp)
 	//symmetry();
 	for (int i = 0; i < PAWN_NUMBER; ++i)
 	{
+		if (multieat > 0 && multieat != i)
+			continue;
 		if ( player_pawn[i].struct_id().id < 12)
 		{
 			indexxx = i;
@@ -114,12 +116,12 @@ bool player::borderright(pawnmove right,int eatflag)
 bool player::movelegal(int idd,sf::Vector2i coor)
 {
 	
-	if (multieat!=idd && multieat>0)
-		return false;
+	//if (multieat!=idd && multieat>0)
+		//return false;
 
 	if (legalmove_id(idd) == true)	
 		return mv(idd, coor);
-	
+	return false;
 		
 }
 bool player::mv(int idd, sf::Vector2i coor) {
@@ -353,10 +355,6 @@ bool player::rightright(pawnmove array_pawnn, bool bflag,int flag = 0)
 				}
 				if (hold == true)
 				{
-
-					
-
-					
 					player_pawn[indexxx].path_pawn(path{ beginpath,array_pawnn,holdid,3 });
 					beginpath = array_pawnn;
 				}
@@ -390,9 +388,10 @@ bool player::rightright(pawnmove array_pawnn, bool bflag,int flag = 0)
 						player_pawn[indexxx].path_pawn(path{ beginpath,array_pawnn,holdid,3 });
 					}
 					magic = magic * (-1);
-					if (bannedd == 0)
-						banned.clear();
+					
 				}
+				if (bannedd == 0)
+					banned.clear();
 			}
 			//flag = 1;
 			

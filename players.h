@@ -6,45 +6,36 @@
 #include <iostream>
 #include <cstdlib>
 #include <iostream>
-
 #include "pawns.h"
-
-
+#define PAWN_NUMBER 12
+#define PLAYER_ONE 0
+#define PLAYER_TWO 5
 class player {
+
 private:
 
 	int indexxx;
 	bool eatormove = false;
-	
 	path pathmove;
 	pawnmove beginpath;
 	pawnmove endpath;
-	
-	
 	int base;
 	int player_id;
 	bool active_status;
 	int magic;
-	
 	player *player2;
-	
 	int multieat=-1;
 	int path_move;
-	
-	bool king = false;
-	bool finish = false;
-	
 	std::vector<int> banned;
-
 public:
 	std::vector<pawns> player_pawn;
+
+	player(int plyr);
+
 	player();
 	player(int plyr, sf::Texture *texture, sf::Texture *text);
 	int getplayer_id();
 	void status(player * opp);
-	
-	//void symmetry();
-	
 	int emptyright(pawnmove right, int eatflag=0);
 	int emptyleft(pawnmove right, int eatflag=0);
 	bool borderleft(pawnmove left, int eatflag=0);

@@ -5,15 +5,23 @@
 int pawns::id_rd = 0;
 
 
-pawns::pawns(int redorblue, sf::Texture *texture,sf::Texture *text) :player_id(redorblue) 
+texture pawn_border(cwd("borderr.png"));
+texture red_texture(cwd("fire.png"));
+texture blue_texture(cwd("blue.png"));
+texture red_king_texture(cwd("fire_king.png"));
+texture blue_king_texture(cwd("blue_king.png"));
+
+
+pawns::pawns(int redorblue) :player_id(redorblue) 
 {
 	
 		circle=(sf::CircleShape(50));
-		circle.setTexture(texture);
+		
 		squareborder = sf::RectangleShape(sf::Vector2f(100, 100));
-		squareborder.setTexture(text);
+		squareborder.setTexture(pawn_border.map());
 		if (redorblue == 0) 
 		{
+			circle.setTexture(red_texture.map());
 			id = id_rd;
 			++id_rd;
 			position(0,1);
@@ -22,6 +30,7 @@ pawns::pawns(int redorblue, sf::Texture *texture,sf::Texture *text) :player_id(r
 		}
 		if (redorblue == 5) 
 		{
+			circle.setTexture(blue_texture.map());
 			id = 11-id_rd;
 			++id_rd;
 			position(1,0);
@@ -98,6 +107,10 @@ void pawns::moveforward(sf::Vector2i coor)
 }
 void pawns::transform() 
 {
+	if (player_id == 0)
+		circle.setTexture(red_king_texture.map());
+	else
+		circle.setTexture(blue_king_texture.map());
 
 }
 void pawns::dell()
