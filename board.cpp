@@ -1,34 +1,33 @@
 #include "board.h"
 
-int board::id_b = 0;
-int board::id_w = 0;
+
 		
 
-texture black_board_texture(cwd("black.png"));    // load texture
-texture white_board_texture(cwd("white.png"));
-texture border(cwd("frame.png"));
+texture black_board_texture("black.png");    // load texture
+texture white_board_texture("white.png");
+texture border("frame.png");
 
 
 
-board::board(int color) {
+board::board(int color,int id_loop) {
 
 	square = sf::RectangleShape(sf::Vector2f(100, 100));   //inisitalise rectangle 100x100 for barod case 
-	
+	id = id_loop;  // id of board
 	
 	if (color == 0) // if 0 the barod is white
 	{
 		square.setTexture(white_board_texture.map());
-	id = id_w; // id of board
-	++id_w;
+	
+	
 	position(0, 1);
     }
 	if (color == 1) // if 1 the board is black
 	{
 		square.setTexture(black_board_texture.map());
-	id = id_b;
-	++id_b;
+	
 	square_path = sf::RectangleShape(sf::Vector2f(100, 100));  //create texture that surround board case when pawn selected 
 	square_path.setTexture(border.map());
+	//square_path.setFillColor(sf::Color())
 	position(1, 0);
 	
 	}

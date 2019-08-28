@@ -15,18 +15,25 @@ class Game
 
 private:
 	sf::Event event;
+	sf::RectangleShape finish;
 	sf::RenderWindow window;
 	player playerone;
 	player playertwo;
 	std::vector<board> boardblack;
 	std::vector<board> boardwhite;
-
-public:
-	Game();
-	void run();
+	sf::Text txt;
+	sf::Font font;
 	void draw();
-	void events();
+	bool events();
 	player &turn();
 	player & notmyturn();
 	void swap();
+public:
+	Game();
+	void boardinit();
+	void playerinit();
+	void endblackrectangle();
+	bool initfont();
+	bool run();
+	
 };

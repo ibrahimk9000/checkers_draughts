@@ -27,34 +27,18 @@ private:
 	int multieat=-1;
 	int path_move;
 	std::vector<int> banned;
-public:
 	std::vector<pawns> player_pawn;
-
-	player(int plyr);
-
-	player();
-	player(int plyr, sf::Texture *texture, sf::Texture *text);
-	int getplayer_id();
-	void status(player * opp);
-	int emptyright(pawnmove right, int eatflag=0);
-	int emptyleft(pawnmove right, int eatflag=0);
-	bool borderleft(pawnmove left, int eatflag=0);
-	bool borderright(pawnmove right, int eatflag=0);
-	bool movelegal(int indexx, sf::Vector2i coor);
-	bool mv(int idd, sf::Vector2i coor);
-	int multieatt();
-	void movepawn(int i, sf::Vector2i cord);
-	void deletepawn(int x);
-	void enable(bool status);
-	bool enabled();
-	pawns & pawn(int index);
 	std::vector<pawns>& vect_pawn();
-	bool legalmove_id(int idd);
-	void lightpath(int idd);
-	bool  return_path(sf::Vector2i cord);
-	void transform(int index);
+	
+	int emptyright(pawnmove right, int eatflag = 0);
+	int emptyleft(pawnmove right, int eatflag = 0);
+	bool borderleft(pawnmove left, int eatflag = 0);
+	bool borderright(pawnmove right, int eatflag = 0);
+	void olm(std::vector<path>& v, int idd);
+	bool mv(int idd, sf::Vector2i coor);
+	void deletepawn(int x);
 	void erazemove(int i);
-	bool rightright(pawnmove array_pawnn,bool bflag,int flag);
+	bool rightright(pawnmove array_pawnn, bool bflag, int flag);
 	bool leftleft(pawnmove array_pawnn, bool bflag, int flag);
 	void increright(pawnmove & r);
 	void increleft(pawnmove & r);
@@ -63,5 +47,26 @@ public:
 	int auraright(pawnmove array_pawnn);
 	int auraleft(pawnmove array_pawnn);
 	bool checkbanned(int i);
+public:
+	bool movelegal(int indexx, sf::Vector2i coor);
+	void status(player * opp);
+
+	player(int plyr);
+	player();
+	int getplayer_id();
+	
+	int multieatt();
+	void movepawn(int i, sf::Vector2i cord);
+	
+	void enable(bool status);
+	bool enabled();
+	pawns & pawn(int index);
+	
+	bool legalmove_id(int idd);
+	bool checkfinish();
+	void lightpath(int idd);
+	bool  return_path(sf::Vector2i cord);
+	void transform(int index);
+	
 };
 

@@ -5,25 +5,27 @@
 int pawns::id_rd = 0;
 
 
-texture pawn_border(cwd("borderr.png"));
-texture red_texture(cwd("fire.png"));
-texture blue_texture(cwd("blue.png"));
-texture red_king_texture(cwd("fire_king.png"));
-texture blue_king_texture(cwd("blue_king.png"));
+texture pawn_border("borderr.png");
+texture red_texture("fire.png");
+texture blue_texture("blue.png");
+texture red_king_texture("fire_king.png");
+texture blue_king_texture("blue_king.png");
 
 
-pawns::pawns(int redorblue) :player_id(redorblue) 
+pawns::pawns(int redorblue,int loop_id) :player_id(redorblue) 
 {
 	
 		circle=(sf::CircleShape(50));
 		
 		squareborder = sf::RectangleShape(sf::Vector2f(100, 100));
 		squareborder.setTexture(pawn_border.map());
+		id = loop_id;
+
 		if (redorblue == 0) 
 		{
 			circle.setTexture(red_texture.map());
-			id = id_rd;
-			++id_rd;
+			
+			
 			position(0,1);
 			id_cord = { id, x_cord, y_cord };
 	
@@ -31,14 +33,12 @@ pawns::pawns(int redorblue) :player_id(redorblue)
 		if (redorblue == 5) 
 		{
 			circle.setTexture(blue_texture.map());
-			id = 11-id_rd;
-			++id_rd;
+			
 			position(1,0);
 		//	id = 11 - id;
 			id_cord = pawnmove{ std::abs(id),x_cord, y_cord };
 		}
-		if (id_rd==12)
-			id_rd = 0;
+		
 }
 
 pawnmove &pawns::struct_id()

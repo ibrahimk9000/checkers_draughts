@@ -16,9 +16,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, INT)
 #endif
 int main(int argc, char* argv[])
 {
-	
+	bool l = false;
+	while (!l) {
 		Game game;
-		game.run();
+		l=game.run();
+		//Sleep(1000);
+	}
 	return 0;
 }
 

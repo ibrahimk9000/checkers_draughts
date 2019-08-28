@@ -6,58 +6,103 @@
 const float G_xcord[8] = { 0.0f,100.0f,200.0f,300.0f,400.0f,500.0f,600.0f,700.0f };
 const float G_ycord[8] = { 0.0f,100.0f,200.f,300.0f,400.0f,500.0f,600.0f,700.0f };
 
-Game::Game():window(sf::VideoMode(800, 800), "Checkers") {};
+Game::Game():window(sf::VideoMode(800, 800), "Checkers", sf::Style::Close) {};
 
-void Game::run() {
-	window.setFramerateLimit(40);
+void Game::boardinit()
+{
+	for (int i = 0; i < 32; ++i) 
+	{
+		//initialise vector of 32 board black and white 
 
-for (int i = 0; i < 32; ++i) {
-	//initialise vector of 32 board black and white 
-	boardwhite.push_back(board(0));    //param 0 and  for positioning 
-	boardblack.push_back(board(1));
+		boardwhite.push_back(board(0,i));  
+	                                 //param 0 and  for positioning 
+		boardblack.push_back(board(1,i));
+	}
 }
 
 
+void Game::playerinit()
+{
+	playertwo = player(PLAYER_TWO);
+	playerone = player(PLAYER_ONE);
+}
+void Game::endblackrectangle() {
+	finish = sf::RectangleShape(sf::Vector2f(800, 800));
+	finish.setFillColor(sf::Color(0, 0, 0, 40));
+}
 
-//inistialise players  
-playertwo = player(PLAYER_TWO);
- playerone=player(PLAYER_ONE);
- 
+bool Game::initfont() {
+	if (!font.loadFromFile("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"))
+	{
 
- Game::events();
+		return true;
+	}
+
+	txt.setFont(font);
+
+	txt.setCharacterSize(40);
+	txt.setFillColor(sf::Color::White);
+	txt.setPosition(275.0, 375.0);
+
+}
+bool Game::run() {
+	bool stat= false;
+
+	window.setFramerateLimit(40);
+	boardinit();
+	playerinit();
+	endblackrectangle();
+	Game::initfont();
  
- 
+ stat=Game::events();
+ return stat;
+
 }
 void Game::draw()
 {
+
+	window.clear();
+
+	for (auto i = 0; i < 32; ++i)
+	{
+		window.draw(boardwhite[i].display());   // draw board case
+
+		window.draw(boardblack[i].display());
+		if (turn().return_path(boardblack[i].cord()))
+			window.draw(boardblack[i].display_path());   //draw pawn move possbilities
+	}
+	for (int i = 0; i < PAWN_NUMBER; ++i)
+	{
+		if (notmyturn().pawn(i).get_id() != 12)
+			window.draw(notmyturn().pawn(i).display());
+	}
+	for (int i = 0; i < PAWN_NUMBER; ++i)
+	{
+		if (turn().pawn(i).get_id() != 12)
+			window.draw(turn().pawn(i).display());   //draw pawn texture
+
+		if (turn().legalmove_id(i))
+			window.draw(turn().pawn(i).displayborder());   // draw texture of pawn that can be moved
 	
-window.clear();
-
-for (auto i = 0; i < 32; ++i) 
-{
-	window.draw(boardwhite[i].display());   // draw board case
+		if (turn().checkfinish()) {
+			window.draw(finish);
+			if (turn().getplayer_id() == 5)
 			
-	window.draw(boardblack[i].display());
-	if (turn().return_path(boardblack[i].cord())) 
-	 window.draw(boardblack[i].display_path());   //draw pawn move possbilities
-}
-for (int i = 0; i < PAWN_NUMBER; ++i) 
-{
- if (turn().pawn(i).get_id() != 12)
- window.draw(turn().pawn(i).display());   //draw pawn texture
+				txt.setString("Playerone Win");
+			else 
+				txt.setString("Playertwo Win");
 
-  if (notmyturn().pawn(i).get_id() != 12)
-  window.draw(notmyturn().pawn(i).display());
+			window.draw(txt);
+		}
+		
 
-  if (turn().legalmove_id(i))
-   window.draw(turn().pawn(i).displayborder());   // draw texture of pawn that can be moved
+	}
 
-}
 
  window.display();
 }
 
-void Game::events()
+bool Game::events()
 {
  bool clicked = false;  // for mouse move
  int indexx;
@@ -80,6 +125,8 @@ void Game::events()
     case sf::Event::MouseButtonPressed:
 	  if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left)
 		{
+		  if (turn().checkfinish())
+			  return false;
 		 if (clicked == false)   // to prevent trigger mousebuttonpressed event  when mouse button realised
 		  {
 		    for (int i = 0; i < PAWN_NUMBER; ++i) 
@@ -135,8 +182,12 @@ void Game::events()
 	break;
    }
   }
-  if (event.type == sf::Event::Closed)
-				window.close();
+  if (event.type == sf::Event::Closed) {
+  window.close();
+   
+	return true;
+  }
+
  }
 }
 

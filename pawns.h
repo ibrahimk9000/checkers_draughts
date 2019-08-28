@@ -18,7 +18,8 @@ struct path {
 	pawnmove begin;
 	pawnmove end;
 	int  opponentid;
-	int eatstatus;
+	pawnmove eatstatus;
+	bool first;
 };
 class pawns
 {
@@ -37,16 +38,18 @@ private:
 	int board;
 	pawnmove id_cord;
 	sf::RectangleShape squareborder;
-public:
 	pawnmove cfour;
 
-	pawns(int redorblue, sf::Texture * texture, sf::Texture * text);
+public:
+	
 	std::vector<path> path_pawnn;
 	sf::CircleShape &display();
 	sf::RectangleShape & displayborder();
 	
 	int get_id();
-	pawns(int redorblue);
+
+	pawns(int redorblue, int loop_id);
+
 	pawnmove &struct_id();
 	void position(int offsetblue, int offsetred);
 	void move(int movex,int movey);

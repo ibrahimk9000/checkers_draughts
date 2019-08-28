@@ -15,11 +15,12 @@
 #include <iostream>
 #define DEFSL "/res/"
 #endif
-std::string cwd(std::string res);
 class texture
 {
 private:
 	sf::Texture textu;
+	std::string cwd(const std::string &res);
+
 public:
 	texture(const std::string &path);
 	sf::Texture *map();
