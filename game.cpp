@@ -3,28 +3,51 @@
 //  board square  100x100  coordinate in window 800x800
 // pawn circle 50 diameter
 //board and pawns coordinate in window 
+
 const float G_xcord[8] = { 0.0f,100.0f,200.0f,300.0f,400.0f,500.0f,600.0f,700.0f };
 const float G_ycord[8] = { 0.0f,100.0f,200.f,300.0f,400.0f,500.0f,600.0f,700.0f };
 
+
 Game::Game():window(sf::VideoMode(800, 800), "Checkers", sf::Style::Close) {};
+
+bool Game::textureinit()
+{
+	try {
+		black_board_texture.init("black.png");    // load texture
+		white_board_texture.init("white.png");
+		border.init("frame.png");
+
+		pawn_border.init("borderr.png");
+		red_texture.init("fire.png");
+		blue_texture.init("blue.png");
+		red_king_texture.init("fire_king.png");
+		blue_king_texture.init("blue_king.png");
+	}
+	catch (...)
+	{
+
+		return true;
+	}
+	return false;
+}
 
 void Game::boardinit()
 {
-	for (int i = 0; i < 32; ++i) 
+	for (int i = 0; i < BLACK_BOARD_NUM; ++i) 
 	{
-		//initialise vector of 32 board black and white 
+		//initialise vector of BLACK_BOARD_NUM board black and white 
 
-		boardwhite.push_back(board(0,i));  
+		boardwhite.push_back(board(0,i, &white_board_texture,nullptr));
 	                                 //param 0 and  for positioning 
-		boardblack.push_back(board(1,i));
+		boardblack.push_back(board(1,i, &black_board_texture, &border));
 	}
 }
 
 
 void Game::playerinit()
 {
-	playertwo = player(PLAYER_TWO);
-	playerone = player(PLAYER_ONE);
+	playertwo = player(PLAYER_TWO,&blue_texture,&blue_king_texture,&pawn_border);
+	playerone = player(PLAYER_ONE,&red_texture, &red_king_texture,&pawn_border);
 }
 void Game::endblackrectangle() {
 	finish = sf::RectangleShape(sf::Vector2f(800, 800));
@@ -32,10 +55,10 @@ void Game::endblackrectangle() {
 }
 
 bool Game::initfont() {
-	if (!font.loadFromFile("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"))
+	if (!font.loadFromFile(FONTPATH))
 	{
 
-		return true;
+		//return true;  //font is not big deal its only appear in the end
 	}
 
 	txt.setFont(font);
@@ -43,17 +66,22 @@ bool Game::initfont() {
 	txt.setCharacterSize(40);
 	txt.setFillColor(sf::Color::White);
 	txt.setPosition(275.0, 375.0);
-
+	return false;
 }
+
 bool Game::run() {
 	bool stat= false;
 
 	window.setFramerateLimit(40);
+
+	initfont();
+	if (textureinit())
+		return true;
+
 	boardinit();
 	playerinit();
 	endblackrectangle();
-	Game::initfont();
- 
+	
  stat=Game::events();
  return stat;
 
@@ -63,38 +91,38 @@ void Game::draw()
 
 	window.clear();
 
-	for (auto i = 0; i < 32; ++i)
+	for (auto i = 0; i < BLACK_BOARD_NUM; ++i)
 	{
 		window.draw(boardwhite[i].display());   // draw board case
 
 		window.draw(boardblack[i].display());
-		if (turn().return_path(boardblack[i].cord()))
+		if (turn->return_path(boardblack[i].cord()))
 			window.draw(boardblack[i].display_path());   //draw pawn move possbilities
 	}
 	for (int i = 0; i < PAWN_NUMBER; ++i)
 	{
-		if (notmyturn().pawn(i).get_id() != 12)
-			window.draw(notmyturn().pawn(i).display());
+		if (nturn->pawn(i).get_id() != PAWN_NUMBER)
+			window.draw(nturn->pawn(i).display());
 	}
 	for (int i = 0; i < PAWN_NUMBER; ++i)
 	{
-		if (turn().pawn(i).get_id() != 12)
-			window.draw(turn().pawn(i).display());   //draw pawn texture
+		if (turn->pawn(i).get_id() != PAWN_NUMBER)
+			window.draw(turn->pawn(i).display());   //draw pawn texture
 
-		if (turn().legalmove_id(i))
-			window.draw(turn().pawn(i).displayborder());   // draw texture of pawn that can be moved
+		if (turn->legalmove_id(i))
+			window.draw(turn->pawn(i).displayborder());   // draw texture of pawn that can be moved
 	
-		if (turn().checkfinish()) {
-			window.draw(finish);
-			if (turn().getplayer_id() == 5)
-			
-				txt.setString("Playerone Win");
-			else 
-				txt.setString("Playertwo Win");
-
-			window.draw(txt);
-		}
 		
+		}
+	if (turn->checkfinish()) {
+		window.draw(finish);
+		if (turn->getplayer_id() == PLAYER_TWO)
+
+			txt.setString("Playerone Win");
+		else
+			txt.setString("Playertwo Win");
+
+		window.draw(txt);
 
 	}
 
@@ -108,8 +136,9 @@ bool Game::events()
  int indexx;
  sf::Event event;
 
- playerone.enable(true);  
- turn().status(&notmyturn());  //check status of player pawn if can be moved or can eat
+ turn = &playerone;
+ nturn = &playertwo;
+ turn->status(nturn);  //check status of player pawn if can be moved or can eat
 
  while (window.isOpen())
  {
@@ -121,97 +150,89 @@ bool Game::events()
    
    switch (event.type) 
    {
-
+    ////////////////////////////////////
     case sf::Event::MouseButtonPressed:
-	  if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left)
+
+	  if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left && clicked == false)
 		{
-		  if (turn().checkfinish())
+		  if (turn->checkfinish())
 			  return false;
-		 if (clicked == false)   // to prevent trigger mousebuttonpressed event  when mouse button realised
-		  {
+		
 		    for (int i = 0; i < PAWN_NUMBER; ++i) 
 			 {
 			// define the pawn selected by mouse
-			  if (turn().pawn(i).display().getGlobalBounds().contains(event.mouseButton.x, event.mouseButton.y)) 
-			  { 
-				clicked = true;
-				indexx = i;
-				turn().lightpath(turn().pawn(i).get_id());  //reveal the possible move of the pawn selectd
-				turn().pawn(i).select(event.mouseButton.x, event.mouseButton.y);  //store the mouse position when select pawn
-				break;
-			  }
+				
+					if (turn->legalmove_id(i) && turn->pawn(i).display().getGlobalBounds().contains(event.mouseButton.x, event.mouseButton.y))
+					{
+						clicked = true;
+						indexx = i;
+						turn->lightpath(i);//turn->pawn(i).get_id());  //reveal the possible move of the pawn selectd
+						turn->pawn(i).select(event.mouseButton.x, event.mouseButton.y);  //store the mouse position when select pawn
+						break;
+					}
+				
 			}
-		  }
+		  
 		}
 	break;
+	////////////////////////////
 
+	///////////////////////////
 	case sf::Event::MouseMoved:
-	 if (event.type == sf::Event::MouseMoved && clicked == true)
-		//move the pawn when mouse moved ( drop and down )
-		if (turn().legalmove_id(indexx))
-		turn().pawn(indexx).move(event.mouseMove.x, event.mouseMove.y);
+		if (event.type == sf::Event::MouseMoved && clicked == true)
+		{
+			//move the pawn when mouse moved ( drop and down )
+			turn->pawn(indexx).move(event.mouseMove.x, event.mouseMove.y);
+		}
 	break;
+	///////////////////////////
 
+	///////////////////////////
 	case sf::Event::MouseButtonReleased:
-     if (event.type == sf::Event::MouseButtonReleased && event.mouseButton.button == sf::Mouse::Left && clicked == true )
+		if (event.type == sf::Event::MouseButtonReleased && event.mouseButton.button == sf::Mouse::Left && clicked == true )
 	  {
-	   for (int i = 0; i < 32; ++i)
+	   for (int i = 0; i < BLACK_BOARD_NUM; ++i)
 	    {
 		//define the board case that pawn moved to  and check if possible to move  to it
-		 if (boardblack[i].display().getGlobalBounds().contains(event.mouseButton.x, event.mouseButton.y) && turn().movelegal(indexx, boardblack[i].cord()))
+		 if (boardblack[i].display().getGlobalBounds().contains(event.mouseButton.x, event.mouseButton.y) && turn->movelegal(indexx, boardblack[i].cord()))
 		  {
-		    turn().movepawn(indexx, boardblack[i].cord());
+		    turn->movepawn(indexx, boardblack[i].cord());
 			//disable selected pawn possible move texture
-			turn().lightpath(12);
-			if (turn().multieatt()<0)
+			turn->lightpath(PAWN_NUMBER);
+			if (turn->multieatt()<0)
 			 swap();   //swap to oppoent player
 
-			turn().status(&notmyturn());
+			turn->status(nturn);
 			clicked = false;
 			break;
 		  }
 		}
 
-	  if (clicked == true)
+	  if (clicked == true)    //confusing logic
 	   {
 		//reset move if move is not legal
-		turn().pawn(indexx).resetmove();
+		turn->pawn(indexx).resetmove();
 		clicked = false;
 	   }
 	 }
 	break;
+	////////////////////////////////////
+
    }
   }
   if (event.type == sf::Event::Closed) {
   window.close();
    
-	return true;
+	return true; 
   }
 
  }
 }
 
-	// return player who can have the turn
-player &Game::turn() {  
-	if (playerone.enabled() == true)
-		return playerone;
-	return playertwo;
-}
-player &Game::notmyturn() {
-	if (playerone.enabled() == false)
-		return playerone;
-	return playertwo;
-}
 void Game::swap() // swap  between playerone and playertwo
 {
-	if (playerone.enabled()==false)
-	{
-		playerone.enable(true);
-		playertwo.enable(false);
-	}
-	else
-	{
-		playerone.enable(false);
-		playertwo.enable(true);
-	}
+	player *t1;
+	t1 = turn;
+	turn = nturn;
+	nturn = t1;
 }

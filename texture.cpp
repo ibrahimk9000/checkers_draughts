@@ -10,7 +10,7 @@ std::string texture::cwd(const std::string &res) {
 	}
 	return resu;
 }
-texture::texture(const std::string &path)
+void texture::init(const std::string &path)
 {
 	
 try
@@ -24,13 +24,14 @@ catch (int )
 {
 #ifdef _WIN32
 	std::string err = path;
-	err += "not found";
+	err += " not found";
 	MessageBoxA(NULL,err.c_str(),"Error!", MB_ICONEXCLAMATION | MB_OK);
-	exit(1);
+	
 #elif __linux__	
 	std::cerr<<path<<" not found";
-	exit(1);
+	
 #endif
+	throw;
 }
 
 	}

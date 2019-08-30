@@ -21,6 +21,10 @@ private:
 
 public:
 	board(int color, int id_loop);
+	board(int color, int id_loop, sf::Texture & tboard, sf::Texture & tborder);
+	
+	board(int color, int id_loop, texture & tboard, texture & tborder);
+	board(int color, int id_loop, texture * tboard, texture * tborder);
 	sf::RectangleShape &display();
 	sf::RectangleShape & display_path();
 	sf::Vector2i cord();

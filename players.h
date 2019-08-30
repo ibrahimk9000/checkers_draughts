@@ -25,7 +25,7 @@ private:
 	int magic;
 	player *player2;
 	int multieat=-1;
-	int path_move;
+	int possible_move=PAWN_NUMBER;
 	std::vector<int> banned;
 	std::vector<pawns> player_pawn;
 	std::vector<pawns>& vect_pawn();
@@ -52,6 +52,7 @@ public:
 	void status(player * opp);
 
 	player(int plyr);
+	player(int plyr, texture * tpawn, texture * tkpawn, texture * tborder);
 	player();
 	int getplayer_id();
 	

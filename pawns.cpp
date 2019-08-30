@@ -2,28 +2,34 @@
 #include "pawns.h"
 
 #include <cstdlib>
-int pawns::id_rd = 0;
 
 
-texture pawn_border("borderr.png");
-texture red_texture("fire.png");
-texture blue_texture("blue.png");
-texture red_king_texture("fire_king.png");
-texture blue_king_texture("blue_king.png");
+
+//texture pawn_border("borderr.png");
+//texture red_texture("fire.png");
+//texture blue_texture("blue.png");
+//texture red_king_texture("fire_king.png");
+//texture blue_king_texture("blue_king.png");
 
 
-pawns::pawns(int redorblue,int loop_id) :player_id(redorblue) 
+pawns::pawns(int redorblue, int loop_id, texture *gtpawn, texture *gtkpawn, texture *gtborder) 
 {
 	
+	player_id = redorblue;
+	tpawn = gtpawn;
+	tkpawn = gtkpawn;
+	tborder = gtborder;
 		circle=(sf::CircleShape(50));
 		
 		squareborder = sf::RectangleShape(sf::Vector2f(100, 100));
-		squareborder.setTexture(pawn_border.map());
+		squareborder.setTexture(tborder->map());
 		id = loop_id;
+
+		circle.setTexture(tpawn->map());
 
 		if (redorblue == 0) 
 		{
-			circle.setTexture(red_texture.map());
+			
 			
 			
 			position(0,1);
@@ -32,7 +38,7 @@ pawns::pawns(int redorblue,int loop_id) :player_id(redorblue)
 		}
 		if (redorblue == 5) 
 		{
-			circle.setTexture(blue_texture.map());
+			
 			
 			position(1,0);
 		//	id = 11 - id;
@@ -107,10 +113,8 @@ void pawns::moveforward(sf::Vector2i coor)
 }
 void pawns::transform() 
 {
-	if (player_id == 0)
-		circle.setTexture(red_king_texture.map());
-	else
-		circle.setTexture(blue_king_texture.map());
+	
+		circle.setTexture(tkpawn->map());
 
 }
 void pawns::dell()

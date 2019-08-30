@@ -31,7 +31,7 @@ private:
 	sf::Vector2f mouseRectOffset;
 	sf::Vector2f lastpos;
 	bool king = false;
-	int static id_rd;
+	
 	int id;
 	int x_cord;
 	int y_cord;
@@ -39,7 +39,7 @@ private:
 	pawnmove id_cord;
 	sf::RectangleShape squareborder;
 	pawnmove cfour;
-
+	texture *tpawn, *tkpawn, *tborder;
 public:
 	
 	std::vector<path> path_pawnn;
@@ -48,7 +48,9 @@ public:
 	
 	int get_id();
 
-	pawns(int redorblue, int loop_id);
+	
+
+	pawns(int redorblue, int loop_id,texture *tpawn, texture * tkpawn, texture * tborder);
 
 	pawnmove &struct_id();
 	void position(int offsetblue, int offsetred);

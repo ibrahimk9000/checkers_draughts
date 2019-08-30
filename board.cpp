@@ -3,30 +3,30 @@
 
 		
 
-texture black_board_texture("black.png");    // load texture
-texture white_board_texture("white.png");
-texture border("frame.png");
+//texture black_board_texture("black.png");    // load texture
+//texture white_board_texture("white.png");
+//texture border("frame.png");
 
 
 
-board::board(int color,int id_loop) {
+board::board(int color,int id_loop,texture *tboard,texture *tborder) {
 
 	square = sf::RectangleShape(sf::Vector2f(100, 100));   //inisitalise rectangle 100x100 for barod case 
 	id = id_loop;  // id of board
-	
+	square.setTexture(tboard->map());
 	if (color == 0) // if 0 the barod is white
 	{
-		square.setTexture(white_board_texture.map());
+	
 	
 	
 	position(0, 1);
     }
 	if (color == 1) // if 1 the board is black
 	{
-		square.setTexture(black_board_texture.map());
+		
 	
 	square_path = sf::RectangleShape(sf::Vector2f(100, 100));  //create texture that surround board case when pawn selected 
-	square_path.setTexture(border.map());
+	square_path.setTexture(tborder->map());
 	//square_path.setFillColor(sf::Color())
 	position(1, 0);
 	

@@ -1,19 +1,19 @@
 #include "players.h"
 
-player::player(int plyr) :player_id(plyr) 
+player::player(int plyr, texture *tpawn,texture *tkpawn,texture *tborder) :player_id(plyr)
 {
 	  //initialise vector of pawns
 		
-		if (player_id == 5)
+		if (player_id == PLAYER_TWO)
 		{
-			for (int i = 11; i >=0 ; --i)
-				player_pawn.push_back(pawns(player_id,i));
+			for (int i = 11; i >= 0; --i)
+				player_pawn.push_back(pawns(player_id, i,tpawn,tkpawn,tborder));
 
 			base = 7;
 		}
-		else {
+		if (player_id == PLAYER_ONE) {
 			for (int i = 0; i < PAWN_NUMBER; ++i)
-			player_pawn.push_back(pawns(player_id,i));
+			player_pawn.push_back(pawns(player_id,i,tpawn, tkpawn, tborder));
 
 			base = 0;
 		}
@@ -45,7 +45,7 @@ void player::status(player* opp)
 	{
 		if (multieat > 0 && multieat != i)
 			continue;
-		if ( player_pawn[i].struct_id().id < 12)
+		if ( player_pawn[i].struct_id().id < PAWN_NUMBER)
 		{
 			indexxx = i;
 			if (player_pawn[i].kings() == true)
@@ -222,7 +222,7 @@ void player::movepawn(int idd, sf::Vector2i cord)
 void player::deletepawn(int x)
 {
 	int i;
-	for (int f=0; f < 12; ++f) {
+	for (int f=0; f < PAWN_NUMBER; ++f) {
 		if (player_pawn[f].get_id() == x)
 			i = f;
 	}
@@ -257,7 +257,7 @@ bool player::legalmove_id(int idd)
 }
 bool player::checkfinish()
 {
-	for (int i = 0; i < 12; ++i)
+	for (int i = 0; i < PAWN_NUMBER; ++i)
 	{
 		if (legalmove_id(i))
 			return false;
@@ -266,12 +266,14 @@ bool player::checkfinish()
 }
 void player::lightpath(int idd)
 {
-	path_move = idd;
+	possible_move = idd;
 }
 bool  player::return_path(sf::Vector2i cord)
 {
-	for (int i = 0; i < 12; ++i) {
-		for (auto &elem : player_pawn[i].path_pawnn)
+	//for (int i = 0; i < PAWN_NUMBER; ++i) {
+	if (possible_move < 0 || possible_move>11)
+		return false;
+		for (auto &elem : player_pawn[possible_move].path_pawnn)
 		{
 			int xxx, yyy;
 			xxx = elem.begin.x;
@@ -286,7 +288,7 @@ bool  player::return_path(sf::Vector2i cord)
 			while (xxx != elem.end.x && yyy != elem.end.y) {
 				xxx = xxx + xx;
 				yyy = yyy + yy;
-				if (cord.x == xxx && cord.y == yyy && elem.begin.id == path_move)
+				if (cord.x == xxx && cord.y == yyy) //&& elem.begin.id == possible_move)
 				{
 					return true;
 					//	break;
@@ -294,7 +296,7 @@ bool  player::return_path(sf::Vector2i cord)
 
 			}
 		}
-	}
+	//}
 	return false;
 }
 
@@ -638,7 +640,7 @@ bool player::rightright(pawnmove array_pawnn, bool bflag,int flag = 0)
 /*
 void player::symmetry()
 {
-	for (int i = 0; i < 12; ++i)
+	for (int i = 0; i < PAWN_NUMBER; ++i)
 	{
 		array_pawn[i].x = std::abs(array_pawn[i].x - 7);
 		array_pawn[i].y = std::abs(array_pawn[i].y - 7);

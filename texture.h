@@ -21,8 +21,10 @@ private:
 	sf::Texture textu;
 	std::string cwd(const std::string &res);
 
+
 public:
-	texture(const std::string &path);
+	void init(const std::string & path);
+
 	sf::Texture *map();
 
 };
