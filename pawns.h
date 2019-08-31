@@ -21,6 +21,7 @@ struct path {
 	pawnmove eatstatus;
 	bool first;
 };
+
 class pawns
 {
 
@@ -30,30 +31,23 @@ private:
 	int status;
 	sf::Vector2f mouseRectOffset;
 	sf::Vector2f lastpos;
-	bool king = false;
 	
-	int id;
-	int x_cord;
-	int y_cord;
 	int board;
 	pawnmove id_cord;
 	sf::RectangleShape squareborder;
 	pawnmove cfour;
 	texture *tpawn, *tkpawn, *tborder;
 public:
-	
-	std::vector<path> path_pawnn;
+	bool king = false;
+	std::vector<path> path_pawn;
 	sf::CircleShape &display();
 	sf::RectangleShape & displayborder();
 	
-	int get_id();
-
-	
-
 	pawns(int redorblue, int loop_id,texture *tpawn, texture * tkpawn, texture * tborder);
 
 	pawnmove &struct_id();
-	void position(int offsetblue, int offsetred);
+	void position(int id);
+	
 	void move(int movex,int movey);
 	void select( int x, int y);
 	void resetmove();
@@ -61,8 +55,4 @@ public:
 	void transform();
 	void dell();
 	sf::Vector2i cord();
-	void setking(bool value);
-	bool kings();
-
-	bool path_pawn(path s);
 };

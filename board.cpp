@@ -9,28 +9,19 @@
 
 
 
-board::board(int color,int id_loop,texture *tboard,texture *tborder) {
+board::board(int clr,int id_loop,texture *tboard,texture *tborder):color(clr) {
 
 	square = sf::RectangleShape(sf::Vector2f(100, 100));   //inisitalise rectangle 100x100 for barod case 
 	id = id_loop;  // id of board
 	square.setTexture(tboard->map());
-	if (color == 0) // if 0 the barod is white
+
+	if (color == 0) // if 1 the board is black
 	{
-	
-	
-	
-	position(0, 1);
-    }
-	if (color == 1) // if 1 the board is black
-	{
-		
-	
 	square_path = sf::RectangleShape(sf::Vector2f(100, 100));  //create texture that surround board case when pawn selected 
 	square_path.setTexture(tborder->map());
 	//square_path.setFillColor(sf::Color())
-	position(1, 0);
-	
 	}
+	position();
 	}
 		
 sf::RectangleShape &board::display() 
@@ -41,26 +32,26 @@ sf::RectangleShape &board::display_path()
 {
 	return square_path;
 }
-void board::position(int black, int white) 
+void board::position() 
 {
 	
 	//make position of black and white board case
 
 	if ((id/4) % 2 == 0) 
 	{
-	x_cord = id % 4 * 2 + white;  //white offset coordinate
+	x_cord = id % 4 * 2 + color;  //white offset coordinate
 	y_cord = id / 4;
 	square.setPosition(G_xcord[x_cord], G_ycord[y_cord]);
 	
     }
 	else 
 	{
-	x_cord = id % 4 * 2 + black;
+	x_cord = id % 4 * 2 + !color;
 	y_cord = id / 4;
 	square.setPosition(G_xcord[x_cord], G_ycord[y_cord]);
 	
 	}
-	if (black == 1)
+	if (color == 0)
 		square_path.setPosition(G_xcord[x_cord], G_ycord[y_cord]);
 }
 			

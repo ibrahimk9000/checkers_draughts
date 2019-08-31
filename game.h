@@ -35,10 +35,8 @@ private:
 	std::vector<board> boardwhite;
 	sf::Text txt;
 	sf::Font font;
-	void draw();
-	bool events();
 	
-	texture black_board_texture;    // load texture
+	texture black_board_texture;    
 	texture white_board_texture;
 	texture border;
 
@@ -47,6 +45,9 @@ private:
 	texture blue_texture;
 	texture red_king_texture;
 	texture blue_king_texture;
+
+	void draw();
+	bool events();
 
 	void boardinit();
 	void playerinit();

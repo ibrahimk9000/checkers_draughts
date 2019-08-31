@@ -6,16 +6,16 @@ player::player(int plyr, texture *tpawn,texture *tkpawn,texture *tborder) :playe
 		
 		if (player_id == PLAYER_TWO)
 		{
-			for (int i = 11; i >= 0; --i)
+			for (int i = PAWN_NUMBER-1; i >= 0; --i)
 				player_pawn.push_back(pawns(player_id, i,tpawn,tkpawn,tborder));
 
-			base = 7;
+			base = 7; //board limit to transform to king
 		}
 		if (player_id == PLAYER_ONE) {
 			for (int i = 0; i < PAWN_NUMBER; ++i)
 			player_pawn.push_back(pawns(player_id,i,tpawn, tkpawn, tborder));
 
-			base = 0;
+			base = 0; //board limit to transform to king
 		}
 
 	
@@ -48,7 +48,7 @@ void player::status(player* opp)
 		if ( player_pawn[i].struct_id().id < PAWN_NUMBER)
 		{
 			indexxx = i;
-			if (player_pawn[i].kings() == true)
+			if (player_pawn[i].king == true)
 			{
 				rightright( player_pawn[i].struct_id(), true, 0);
 				leftleft( player_pawn[i].struct_id(), true, 0);
@@ -127,7 +127,7 @@ bool player::movelegal(int idd,sf::Vector2i coor)
 }
 void player::olm(std::vector<path> &v, int idd)
 {
-	for (auto &elem : player_pawn[idd].path_pawnn) {
+	for (auto &elem : player_pawn[idd].path_pawn) {
 		if (elem.first == false)
            v.push_back(elem);
 
@@ -223,46 +223,29 @@ void player::deletepawn(int x)
 {
 	int i;
 	for (int f=0; f < PAWN_NUMBER; ++f) {
-		if (player_pawn[f].get_id() == x)
+		if (player_pawn[f].struct_id().id == x)
 			i = f;
 	}
-	
-				player_pawn[i].dell();
-			
+	player_pawn[i].dell();
+	eaten_p++;
 }
-void player::enable(bool status)
-{
-	active_status = status;
-}
-bool player::enabled()
-{
-	return active_status;
-}
+
 pawns &player::pawn(int index)
 {
 	return player_pawn[index];
 }
-std::vector<pawns> &player::vect_pawn()
-{
-	return player_pawn;
-}
 
 bool player::legalmove_id(int idd)
 {
-  if (!player_pawn[idd].path_pawnn.empty())
+  if (!player_pawn[idd].path_pawn.empty())
   return true;
 	
   return false;
-
 }
 bool player::checkfinish()
 {
-	for (int i = 0; i < PAWN_NUMBER; ++i)
-	{
-		if (legalmove_id(i))
-			return false;
-	}
-	return true;
+	return (eaten_p == 12);
+
 }
 void player::lightpath(int idd)
 {
@@ -273,7 +256,7 @@ bool  player::return_path(sf::Vector2i cord)
 	//for (int i = 0; i < PAWN_NUMBER; ++i) {
 	if (possible_move < 0 || possible_move>11)
 		return false;
-		for (auto &elem : player_pawn[possible_move].path_pawnn)
+		for (auto &elem : player_pawn[possible_move].path_pawn)
 		{
 			int xxx, yyy;
 			xxx = elem.begin.x;
@@ -303,17 +286,13 @@ bool  player::return_path(sf::Vector2i cord)
 
 void player::transform(int index)
 {
-	//change texture
-	player_pawn[index].setking(true);
-	player_pawn[index].transform();
-	
+	player_pawn[index].king=true;
+	player_pawn[index].transform();	
 }
 
 void player::erazemove(int index) {
-	for (int i = 0; i < index + 1; ++i) {
-		player_pawn[i].path_pawn(path{ beginpath,beginpath,20,{0,0,0},false });
-
-}
+	for (int i = 0; i < index + 1; ++i) 
+	player_pawn[i].path_pawn.clear(); 
 }
 	
 bool player::rightright(pawnmove array_pawnn, bool bflag,int flag = 0)
@@ -346,7 +325,7 @@ bool player::rightright(pawnmove array_pawnn, bool bflag,int flag = 0)
 						if (eatormove)
 							break;
 				
-						player_pawn[indexxx].path_pawn(path{ beginpath,array_pawnn,-2,beginpath,bannedd });
+						player_pawn[indexxx].path_pawn.push_back(path{ beginpath,array_pawnn,-2,beginpath,bannedd });
 					}
 
 				}
@@ -354,11 +333,11 @@ bool player::rightright(pawnmove array_pawnn, bool bflag,int flag = 0)
 				if (hold == true && flag == 0) {
 					if (bflag == true) {
 						
-						player_pawn[indexxx].path_pawn(path{ beginpath,array_pawnn,holdid ,cfour,bannedd });
+						player_pawn[indexxx].path_pawn.push_back(path{ beginpath,array_pawnn,holdid ,cfour,bannedd });
 					}
 					else {
 					
-						player_pawn[indexxx].path_pawn(path{ beginpath,array_pawnn,holdid,cfour,bannedd });
+						player_pawn[indexxx].path_pawn.push_back(path{ beginpath,array_pawnn,holdid,cfour,bannedd });
 					}
 			}
 				break;
@@ -366,7 +345,7 @@ bool player::rightright(pawnmove array_pawnn, bool bflag,int flag = 0)
 			if (i == -2) {
 				stagn = false;
 				if (bflag == false && hold == true) {
-					player_pawn[indexxx].path_pawn(path{ beginpath,array_pawnn,holdid,cfour,bannedd });
+					player_pawn[indexxx].path_pawn.push_back(path{ beginpath,array_pawnn,holdid,cfour,bannedd });
 					break;
 				}
 				increright(array_pawnn);
@@ -375,7 +354,7 @@ bool player::rightright(pawnmove array_pawnn, bool bflag,int flag = 0)
 					if (eatormove)
 						break;
 					
-					player_pawn[indexxx].path_pawn(path{ beginpath,array_pawnn,-2,beginpath,bannedd });
+					player_pawn[indexxx].path_pawn.push_back(path{ beginpath,array_pawnn,-2,beginpath,bannedd });
 					break;
 				}
 				//if (hold==true)
@@ -390,7 +369,7 @@ bool player::rightright(pawnmove array_pawnn, bool bflag,int flag = 0)
 				}
 				if (hold == true)
 				{
-					player_pawn[indexxx].path_pawn(path{ beginpath,array_pawnn,holdid,{-2+bannedd,0,0},bannedd });
+					player_pawn[indexxx].path_pawn.push_back(path{ beginpath,array_pawnn,holdid,{-2+bannedd,0,0},bannedd });
 					beginpath = array_pawnn;
 					bannedd = true;
 				}
@@ -398,7 +377,7 @@ bool player::rightright(pawnmove array_pawnn, bool bflag,int flag = 0)
 				holdid = i;
 				banned.push_back(i);
 				cfour = array_pawnn;
-				eatright(array_pawnn, i);
+				eatright(array_pawnn);
 				
 				eat = true;
 				hold = true;
@@ -407,7 +386,7 @@ bool player::rightright(pawnmove array_pawnn, bool bflag,int flag = 0)
 			if (hold == true) {
 				if (leftleft(array_pawnn,bflag, 1) == true) {
 					
-					player_pawn[indexxx].path_pawn(path{ beginpath,array_pawnn,holdid,{-2+bannedd,0,0},bannedd });
+					player_pawn[indexxx].path_pawn.push_back(path{ beginpath,array_pawnn,holdid,{-2+bannedd,0,0},bannedd });
 					flag = 1;
 				}
 				if (bflag == false) {
@@ -421,7 +400,7 @@ bool player::rightright(pawnmove array_pawnn, bool bflag,int flag = 0)
 
 						flag = 1;
 						
-						player_pawn[indexxx].path_pawn(path{ beginpath,array_pawnn,holdid,{-2+bannedd,0,0},bannedd });
+						player_pawn[indexxx].path_pawn.push_back(path{ beginpath,array_pawnn,holdid,{-2+bannedd,0,0},bannedd });
 					}
 					magic = magic * (-1);
 					
@@ -466,18 +445,18 @@ bool player::rightright(pawnmove array_pawnn, bool bflag,int flag = 0)
 						if (eatormove)
 							break;
 					
-						player_pawn[indexxx].path_pawn(path{ beginpath,array_pawnn,-2,beginpath,bannedd });
+						player_pawn[indexxx].path_pawn.push_back(path{ beginpath,array_pawnn,-2,beginpath,bannedd });
 				}
 				}
 
 				if (hold == true && flag == 0) {
 					if (bflag == true) {
 						
-						player_pawn[indexxx].path_pawn(path{ beginpath,array_pawnn,holdid,cfour,bannedd });
+						player_pawn[indexxx].path_pawn.push_back(path{ beginpath,array_pawnn,holdid,cfour,bannedd });
 					}
 					else {
 						
-						player_pawn[indexxx].path_pawn(path{ beginpath,array_pawnn,holdid,cfour,bannedd });
+						player_pawn[indexxx].path_pawn.push_back(path{ beginpath,array_pawnn,holdid,cfour,bannedd });
 					}
 				}
 				break;
@@ -485,7 +464,7 @@ bool player::rightright(pawnmove array_pawnn, bool bflag,int flag = 0)
 			if (i == -2) {
 				stagn = false;
 				if (bflag == false && hold == true) {
-					player_pawn[indexxx].path_pawn(path{ beginpath,array_pawnn,holdid,cfour,bannedd });
+					player_pawn[indexxx].path_pawn.push_back(path{ beginpath,array_pawnn,holdid,cfour,bannedd });
 					break;
 				}
 				increleft(array_pawnn);
@@ -494,7 +473,7 @@ bool player::rightright(pawnmove array_pawnn, bool bflag,int flag = 0)
 					if (eatormove)
 						break;
 					
-					player_pawn[indexxx].path_pawn(path{ beginpath,array_pawnn,-2,beginpath,bannedd });
+					player_pawn[indexxx].path_pawn.push_back(path{ beginpath,array_pawnn,-2,beginpath,bannedd });
 					break;
 				}
 				//if (hold==true)
@@ -510,7 +489,7 @@ bool player::rightright(pawnmove array_pawnn, bool bflag,int flag = 0)
 				if (hold == true) {
 				
 					
-					player_pawn[indexxx].path_pawn(path{ beginpath,array_pawnn,holdid,{-2+bannedd,0,0 },bannedd });
+					player_pawn[indexxx].path_pawn.push_back(path{ beginpath,array_pawnn,holdid,{-2+bannedd,0,0 },bannedd });
 					beginpath = array_pawnn;
 					bannedd = true;
 				}
@@ -518,7 +497,7 @@ bool player::rightright(pawnmove array_pawnn, bool bflag,int flag = 0)
 				holdid = i;
 				banned.push_back(i);
 				cfour = array_pawnn;
-				eatleft(array_pawnn, i);
+				eatleft(array_pawnn);
 				
 				eat = true;
 				hold = true;
@@ -529,7 +508,7 @@ bool player::rightright(pawnmove array_pawnn, bool bflag,int flag = 0)
 
 					flag = 1;
 					
-					player_pawn[indexxx].path_pawn(path{ beginpath,array_pawnn,holdid,{-2+bannedd,0,0 },bannedd });
+					player_pawn[indexxx].path_pawn.push_back(path{ beginpath,array_pawnn,holdid,{-2+bannedd,0,0 },bannedd });
 				}
 				if (bflag == false) {
 					
@@ -542,7 +521,7 @@ bool player::rightright(pawnmove array_pawnn, bool bflag,int flag = 0)
 
 						flag = 1;
 						
-						player_pawn[indexxx].path_pawn(path{ beginpath,array_pawnn,holdid,{-2+bannedd,0,0 },bannedd });
+						player_pawn[indexxx].path_pawn.push_back(path{ beginpath,array_pawnn,holdid,{-2+bannedd,0,0 },bannedd });
 					}
 					magic = magic * (-1);
 				}
@@ -567,21 +546,15 @@ bool player::rightright(pawnmove array_pawnn, bool bflag,int flag = 0)
 			r.x = r.x + magic;
 			r.y = r.y + magic;
 		}
-		bool player::eatright(pawnmove &r, int i)
+		void player::eatright(pawnmove &r)
 		{
-		
 			increright(r);
 			increright(r);
-			return false;
-			
 		}
-		bool player::eatleft(pawnmove &r, int i)
+		void player::eatleft(pawnmove &r)
 		{
-
 			increleft(r);
 			increleft(r);
-			return false;
-
 		}
 	int player::auraright(pawnmove array_pawnn)
 	{

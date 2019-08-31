@@ -23,59 +23,38 @@ pawns::pawns(int redorblue, int loop_id, texture *gtpawn, texture *gtkpawn, text
 		
 		squareborder = sf::RectangleShape(sf::Vector2f(100, 100));
 		squareborder.setTexture(tborder->map());
-		id = loop_id;
-
-		circle.setTexture(tpawn->map());
-
-		if (redorblue == 0) 
-		{
-			
-			
-			
-			position(0,1);
-			id_cord = { id, x_cord, y_cord };
-	
-		}
-		if (redorblue == 5) 
-		{
-			
-			
-			position(1,0);
-		//	id = 11 - id;
-			id_cord = pawnmove{ std::abs(id),x_cord, y_cord };
-		}
 		
+		circle.setTexture(tpawn->map());
+		position(loop_id);
 }
 
 pawnmove &pawns::struct_id()
 {
 	return id_cord;
 }
-void pawns::position(int offsetblue,int offsetred)
+void pawns::position(int id)
 {
-
+	int x_cord, y_cord;
 	if ((id / 4) % 2 == 0)
 	{
-		x_cord = id % 4 * 2 + offsetblue;
+		x_cord = id % 4 * 2 + !!player_id;
 		y_cord = id / 4 + player_id;
 		circle.setPosition(G_xcord[x_cord], G_ycord[y_cord]);
 		squareborder.setPosition(G_xcord[x_cord], G_ycord[y_cord]);
 	}
 	else 
 	{
-		x_cord = id % 4 * 2 + offsetred;
+		x_cord = id % 4 * 2 + !player_id;
 		y_cord = id / 4 + player_id;
 	  circle.setPosition(G_xcord[x_cord], G_ycord[y_cord]);
 	 
 	  squareborder.setPosition(G_xcord[x_cord], G_ycord[y_cord]);
     }
+	id_cord = pawnmove{ id, x_cord, y_cord };
 
 }
 
-int pawns::get_id()
-{
-	return id;
-}
+
 sf::CircleShape &pawns::display()
 {
 	return circle;
@@ -104,11 +83,11 @@ void pawns::resetmove()
 }
 void pawns::moveforward(sf::Vector2i coor)
 {
-	x_cord = coor.x;
-	y_cord = coor.y;
-	id_cord = pawnmove{ id, x_cord, y_cord };
-	circle.setPosition(G_xcord[x_cord], G_ycord[y_cord]);
-	squareborder.setPosition(G_xcord[x_cord], G_ycord[y_cord]);
+	
+	id_cord.x = coor.x;
+	id_cord.y = coor.y;
+	circle.setPosition(G_xcord[coor.x], G_ycord[coor.y]);
+	squareborder.setPosition(G_xcord[coor.x], G_ycord[coor.y]);
 	
 }
 void pawns::transform() 
@@ -119,35 +98,17 @@ void pawns::transform()
 }
 void pawns::dell()
 {
-	x_cord = -1;
-	y_cord = -1;
-	id = 12;
-	id_cord = pawnmove{ id,x_cord,y_cord };
+	
+	id_cord = pawnmove{ 12,-1,-1 };
 	circle.setRadius(0);
 	squareborder.setSize(sf::Vector2f(0, 0));
 }
 sf::Vector2i pawns::cord()
 {
-	return sf::Vector2i(x_cord, y_cord);
+	return sf::Vector2i(id_cord.x, id_cord.y);
 }
-void pawns::setking(bool value)
-{
-	//circle.setTexture();
-	king = value;
-}
-bool pawns::kings()
-{
-return king;
-}
-bool pawns::path_pawn(path s) {
 
-	if (s.opponentid == 20) {
-		path_pawnn.clear();
-		return false;
-	}
-	path_pawnn.push_back(s);
-	return true;
-}
+
 /*
 void pawns::symmetry()
 {

@@ -12,19 +12,15 @@ class board
 private:
 	sf::RectangleShape square;
 	sf::RectangleShape square_path;
-	
+	int color;
 	int id;
 	int x_cord;
 	int y_cord;
-	void position(int black, int white);
-
+	void position();
 
 public:
-	board(int color, int id_loop);
-	board(int color, int id_loop, sf::Texture & tboard, sf::Texture & tborder);
 	
-	board(int color, int id_loop, texture & tboard, texture & tborder);
-	board(int color, int id_loop, texture * tboard, texture * tborder);
+	board(int clr, int id_loop, texture * tboard, texture * tborder);
 	sf::RectangleShape &display();
 	sf::RectangleShape & display_path();
 	sf::Vector2i cord();

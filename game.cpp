@@ -37,9 +37,9 @@ void Game::boardinit()
 	{
 		//initialise vector of BLACK_BOARD_NUM board black and white 
 
-		boardwhite.push_back(board(0,i, &white_board_texture,nullptr));
+		boardwhite.push_back(board(1,i, &white_board_texture,nullptr));
 	                                 //param 0 and  for positioning 
-		boardblack.push_back(board(1,i, &black_board_texture, &border));
+		boardblack.push_back(board(0,i, &black_board_texture, &border));
 	}
 }
 
@@ -101,12 +101,12 @@ void Game::draw()
 	}
 	for (int i = 0; i < PAWN_NUMBER; ++i)
 	{
-		if (nturn->pawn(i).get_id() != PAWN_NUMBER)
+		if (nturn->pawn(i).struct_id().id != PAWN_NUMBER)
 			window.draw(nturn->pawn(i).display());
 	}
 	for (int i = 0; i < PAWN_NUMBER; ++i)
 	{
-		if (turn->pawn(i).get_id() != PAWN_NUMBER)
+		if (turn->pawn(i).struct_id().id != PAWN_NUMBER)
 			window.draw(turn->pawn(i).display());   //draw pawn texture
 
 		if (turn->legalmove_id(i))

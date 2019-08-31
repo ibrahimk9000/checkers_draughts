@@ -23,12 +23,12 @@ try
 catch (int )
 {
 #ifdef _WIN32
-	std::string err = path;
+	std::string err = cwd(path);
 	err += " not found";
 	MessageBoxA(NULL,err.c_str(),"Error!", MB_ICONEXCLAMATION | MB_OK);
 	
 #elif __linux__	
-	std::cerr<<path<<" not found";
+	std::cerr<<cwd(path)<<" not found";
 	
 #endif
 	throw;
