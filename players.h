@@ -10,6 +10,8 @@
 #define PAWN_NUMBER 12
 #define PLAYER_ONE 0
 #define PLAYER_TWO 5
+#define EMPTY_PAWNMOVE {-1,-1,-1}
+
 class player {
 
 private:
@@ -17,18 +19,19 @@ private:
 	int indexxx;
 	bool eatormove = false;
 	path pathmove;
-	pawnmove beginpath;
+	
 	pawnmove endpath;
 	int base;
-	int player_id;
-	bool active_status;
+	
+	
 	int magic;
 	player *player2;
-	int multieat=-1;
+	
 	int possible_move=PAWN_NUMBER;
 	std::vector<int> banned;
 	std::vector<pawns> player_pawn;
 	int eaten_p=0;
+
 	int emptyright(pawnmove right, int eatflag = 0);
 	int emptyleft(pawnmove right, int eatflag = 0);
 	bool borderleft(pawnmove left, int eatflag = 0);
@@ -37,8 +40,10 @@ private:
 	bool mv(int idd, sf::Vector2i coor);
 	void deletepawn(int x);
 	void erazemove(int i);
-	bool rightright(pawnmove array_pawnn, bool bflag, int flag);
-	bool leftleft(pawnmove array_pawnn, bool bflag, int flag);
+	bool rightright(pawnmove array_pawnn, bool first);
+	bool pawn_rightright(pawnmove array_pawnn, bool first);
+	bool pawn_leftleft(pawnmove array_pawnn, bool first);
+	bool leftleft(pawnmove array_pawnn,  bool first);
 	void increright(pawnmove & r);
 	void increleft(pawnmove & r);
 	void eatright(pawnmove & r);
@@ -47,14 +52,16 @@ private:
 	int auraleft(pawnmove array_pawnn);
 	bool checkbanned(int i);
 public:
+	int player_id;
+	int multieat = -1;
+
 	bool movelegal(int indexx, sf::Vector2i coor);
 	void status(player * opp);
 
 	player(int plyr, texture * tpawn, texture * tkpawn, texture * tborder);
 	player();
-	int getplayer_id();
 	
-	int multieatt();
+	
 	void movepawn(int i, sf::Vector2i cord);
 	
 	

@@ -20,6 +20,7 @@ struct path {
 	int  opponentid;
 	pawnmove eatstatus;
 	bool first;
+	bool multi;
 };
 
 class pawns
@@ -38,6 +39,7 @@ private:
 	pawnmove cfour;
 	texture *tpawn, *tkpawn, *tborder;
 public:
+	
 	bool king = false;
 	std::vector<path> path_pawn;
 	sf::CircleShape &display();

@@ -1,3 +1,4 @@
+
 #include "game.h"
 
 #include <iostream>
@@ -5,7 +6,7 @@
 
 #ifdef _WIN32
 #include "resource.h"
-// windows code goes here
+
 #include <windows.h>
 
 int  main(int argc, char* argv[]);
@@ -20,7 +21,7 @@ int main(int argc, char* argv[])
 	while (!l) {
 		Game game;
 		l=game.run();
-		//Sleep(1000);
+		
 	}
 	return 0;
 }

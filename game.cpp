@@ -116,11 +116,12 @@ void Game::draw()
 		}
 	if (turn->checkfinish()) {
 		window.draw(finish);
-		if (turn->getplayer_id() == PLAYER_TWO)
 
-			txt.setString("Playerone Win");
-		else
-			txt.setString("Playertwo Win");
+		if (turn->player_id == PLAYER_TWO)
+			txt.setString("Player_one Win");
+
+		if (turn->player_id == PLAYER_ONE)
+			txt.setString("Player_two Win");
 
 		window.draw(txt);
 
@@ -199,7 +200,7 @@ bool Game::events()
 		    turn->movepawn(indexx, boardblack[i].cord());
 			//disable selected pawn possible move texture
 			turn->lightpath(PAWN_NUMBER);
-			if (turn->multieatt()<0)
+			if (turn->multieat<0)
 			 swap();   //swap to oppoent player
 
 			turn->status(nturn);
