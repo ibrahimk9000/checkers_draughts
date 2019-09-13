@@ -30,8 +30,7 @@ private:
 	int possible_move=PAWN_NUMBER;
 	std::vector<int> banned;
 	std::vector<pawns> player_pawn;
-	int eaten_p=0;
-
+	
 	int emptyright(pawnmove right, int eatflag = 0);
 	int emptyleft(pawnmove right, int eatflag = 0);
 	bool borderleft(pawnmove left, int eatflag = 0);

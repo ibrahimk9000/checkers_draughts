@@ -1,4 +1,4 @@
-TARGET = prog
+TARGET = checkers
 LIBS = -lsfml-graphics -lsfml-window -lsfml-system
 CC = g++
 CFLAGS = -g -Wall

@@ -9,13 +9,13 @@ player::player(int plyr, texture *tpawn,texture *tkpawn,texture *tborder) :playe
 			for (int i = PAWN_NUMBER-1; i >= 0; --i)
 				player_pawn.push_back(pawns(player_id, i,tpawn,tkpawn,tborder));
 
-			base = 7; //board limit to transform to king
+			base = 7; //board limit 
 		}
 		if (player_id == PLAYER_ONE) {
 			for (int i = 0; i < PAWN_NUMBER; ++i)
 			player_pawn.push_back(pawns(player_id,i,tpawn, tkpawn, tborder));
 
-			base = 0; //board limit to transform to king
+			base = 0; //board limit 
 		}
 
 	
@@ -150,6 +150,10 @@ bool player::mv(int idd, sf::Vector2i coor) {
 		if (elem.opponentid >= 0)
 			mag = 1;
 		
+		if (elem.eatstatus.id == elem.begin.id)
+		
+			begin = elem.eatstatus;
+
 		begin = elem.begin;
 		end = elem.end;
 		x = begin.x-end.x;
@@ -225,7 +229,7 @@ void player::deletepawn(int x)
 			i = f;
 	}
 	player_pawn[i].dell();
-	eaten_p++;
+
 }
 
 pawns &player::pawn(int index)
@@ -242,8 +246,14 @@ bool player::legalmove_id(int idd)
 }
 bool player::checkfinish()
 {
-	return (eaten_p == 12);
+	for(int i=0;i<PAWN_NUMBER;++i)
+	
+	{
+		if (legalmove_id(i))
+			return false;
 
+	}
+	return true;
 }
 void player::lightpath(int idd)     
 {
@@ -294,70 +304,74 @@ void player::erazemove(int index) {
 	player_pawn[i].path_pawn.clear(); 
 }
 	
-bool player::rightright(pawnmove array_pawnn,bool first )   
+bool player::rightright(pawnmove array_pawnn,bool first_f )   
 	{
 	std::vector<int> nr = banned;
-	bool multi=false;
+	pawnmove beginpath = array_pawnn;
+	pawnmove cfour;
+	int i;
+	int holdid = -2;
 
-	bool bannedd=first;
-	bool save_move = first;
-		pawnmove beginpath = array_pawnn;
+	bool multi=false;
+	bool first = first_f;
+	bool save_move = first_f;
+	bool eat=false;
+	bool stagn = true;
+	bool hold = false;
+	
 		
-		pawnmove cfour;
-		int i;
-		bool eat=false;
-		bool stagn = true;
-		bool hold = false;
-		int holdid=-2;
-		
-		
-		while (true)
+	for (int np = 0; np < PAWN_NUMBER * 8;++np)    // while (true)
+	 {
+	  i = auraright(array_pawnn);
+
+	   if (i == -1) 
+	   {
+
+		if (hold == false && save_move == true) {
+
+		  if (stagn == false) 
+		  {
+
+			if (eatormove)
+				break;
+
+		   player_pawn[indexxx].path_pawn.push_back(path{ beginpath,array_pawnn,holdid,beginpath,first,multi });
+
+		   }
+
+		}
+
+		if (hold == true && save_move == true) 
+       	player_pawn[indexxx].path_pawn.push_back(path{ beginpath,array_pawnn,holdid ,cfour,first,multi });
+
+		break;
+		}
+
+		if (i == -2) 
+		{
+		 stagn = false;
+		 increright(array_pawnn);	
+		}
+
+		if (i >= 0) 
 		{
 
+		 if (!eatormove)
+		  {
+			eatormove = true;
+			erazemove(indexxx);
+		  }
 
-			i = auraright(array_pawnn);
-			if (i == -1) {
-				if (hold == false && save_move == true) {
-					if (stagn == false) {
-						if (eatormove)
-							break;
+		   if (hold == true)
+		    {
+			  if (first == true)
+				multi = true;
 
-						player_pawn[indexxx].path_pawn.push_back(path{ beginpath,array_pawnn,holdid,beginpath,first,multi });
-					}
-
-				}
-
-				if (hold == true && save_move == true) 
-					player_pawn[indexxx].path_pawn.push_back(path{ beginpath,array_pawnn,holdid ,cfour,first,multi });
-
-
-					break;
-				}
-
-				if (i == -2) {
-					stagn = false;
-					
-					increright(array_pawnn);
-
-					
-				}
-				if (i >= 0) {
-					if (!eatormove)
-					{
-						eatormove = true;
-						erazemove(indexxx);
-					}
-
-					if (hold == true)
-					{
-						if (first == true)
-							multi = true;
-						player_pawn[indexxx].path_pawn.push_back(path{ beginpath,array_pawnn,holdid,EMPTY_PAWNMOVE,first,multi });
-						beginpath = array_pawnn;
-						
-					}
-					
-					
+				player_pawn[indexxx].path_pawn.push_back(path{ beginpath,array_pawnn,holdid,EMPTY_PAWNMOVE,first,multi });
+				beginpath = array_pawnn;
+				first = false;
+			}
+	
 					save_move = true;
 					holdid = i;
 					banned.push_back(i);
@@ -368,6 +382,8 @@ bool player::rightright(pawnmove array_pawnn,bool first )
 					hold = true;
 
 				}
+
+
 				if (hold == true) {
 					if (leftleft(array_pawnn, false) == true) {
 						if (first == true)
@@ -388,22 +404,17 @@ bool player::rightright(pawnmove array_pawnn,bool first )
 						
 					}
 					magic = magic * (-1);
-					
-
-					
-
-
 
 				}
 			
 		}
 		
-			banned = nr;
+		 banned = nr;
 		return eat;
 		}
 
 
-bool player::leftleft(pawnmove array_pawnn, bool first )
+bool player::leftleft(pawnmove array_pawnn, bool first_f )
 {
 	std::vector<int> nr = banned;
 	
@@ -414,7 +425,7 @@ bool player::leftleft(pawnmove array_pawnn, bool first )
 	int holdid = -2;
 
 	int i;
-	
+	bool first = first_f;
 	bool multi = false;
 	bool stagn = true;
 	bool eat = false;;
@@ -423,11 +434,12 @@ bool player::leftleft(pawnmove array_pawnn, bool first )
 	bool save_move = first;
 	
 	
-	while (true)
+	for (int np = 0; np < PAWN_NUMBER * 8; ++np)    // while (true)
 	{
 
 		i = auraleft(array_pawnn);
-		if (i == -1) {
+		if (i == -1) 
+		{
 			if (hold == false && save_move == true) {
 				if (stagn == false) {
 					if (eatormove)
@@ -445,13 +457,12 @@ bool player::leftleft(pawnmove array_pawnn, bool first )
 			
 			break;
 		}
-		if (i == -2) {
+
+		if (i == -2) 
+		{
 			stagn = false;
 			
 			increleft(array_pawnn);
-
-
-
 		}
 		if (i >= 0)
 		{
@@ -460,13 +471,14 @@ bool player::leftleft(pawnmove array_pawnn, bool first )
 				eatormove = true;
 				erazemove(indexxx);
 			}
-			if (hold == true) {
+			if (hold == true) 
+			{
 
 				if (first == true)
 					multi = true;
 				player_pawn[indexxx].path_pawn.push_back(path{ beginpath,array_pawnn,holdid,EMPTY_PAWNMOVE,first,multi });
 				beginpath = array_pawnn;
-				
+				first = false;
 			}
 			
 				
@@ -480,7 +492,8 @@ bool player::leftleft(pawnmove array_pawnn, bool first )
 			hold = true;
 
 		}
-		if (hold == true) {
+		if (hold == true) 
+		{
 			if (rightright(array_pawnn, false) == true) {
 				if (first == true)
 					multi = true;
@@ -507,12 +520,11 @@ bool player::leftleft(pawnmove array_pawnn, bool first )
 
 	}
 
-	
 		banned = nr;
 		
 		return eat;
 
-		}
+}
 	
 		void player::increright(pawnmove &r)
 		{
@@ -596,15 +608,12 @@ bool player::leftleft(pawnmove array_pawnn, bool first )
 		pawnmove beginpath = array_pawnn;
 		
 		int i;
+		bool b1, b2;
 		bool eat = false;
 		int holdid = -2;
 		
 		
 			i = auraright(array_pawnn);
-			if (i == -1) {
-				
-			
-			}
 			if (i == -2) {
 				if (!eatormove)
 				{
@@ -624,7 +633,7 @@ bool player::leftleft(pawnmove array_pawnn, bool first )
 				
 				eatright(array_pawnn);
 				
-				bool b1, b2;
+			
 				b1 = pawn_leftleft(array_pawnn, false);
 				b2 = pawn_rightright(array_pawnn, false);
 					multi = b1 || b2;
@@ -643,16 +652,14 @@ bool player::leftleft(pawnmove array_pawnn, bool first )
 		pawnmove beginpath = array_pawnn;
 
 		int i;
+		bool b1, b2;
 		bool eat = false;
 		int holdid = -2;
 		
 
 		i = auraleft(array_pawnn);
-		if (i == -1) {
-
-
-		}
 		if (i == -2) {
+
 			if (!eatormove)
 			{
 
@@ -670,7 +677,7 @@ bool player::leftleft(pawnmove array_pawnn, bool first )
 			holdid = i;
 			eat = true;
 			eatleft(array_pawnn);
-			bool b1, b2;
+			
 			b1 = pawn_rightright(array_pawnn, false);
 			b2 = pawn_leftleft(array_pawnn, false);
 				multi = b1 || b2 ;

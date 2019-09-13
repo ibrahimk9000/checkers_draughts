@@ -51,7 +51,7 @@ void Game::playerinit()
 }
 void Game::endblackrectangle() {
 	finish = sf::RectangleShape(sf::Vector2f(800, 800));
-	finish.setFillColor(sf::Color(0, 0, 0, 40));
+	finish.setFillColor(sf::Color(0, 0, 0, 70));
 }
 
 bool Game::initfont() {
