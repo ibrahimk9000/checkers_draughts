@@ -7,7 +7,6 @@ spanish checker game (King can move any distance) using SFML library
 
 ![GIF](https://github.com/ibrahimk9000/test/blob/master/deepin-screen-recorder_prog_2019.gif)
 
-![GIF](https://github.com/ibrahimk9000/test/blob/master/eng_chavi-cut-merged-15681436994.gif)
 
 
 ---
