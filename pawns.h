@@ -21,6 +21,7 @@ struct path {
 	pawnmove eatstatus;
 	bool first;
 	bool multi;
+	int direction;
 };
 
 class pawns

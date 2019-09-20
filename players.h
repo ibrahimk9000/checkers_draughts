@@ -30,19 +30,20 @@ private:
 	int possible_move=PAWN_NUMBER;
 	std::vector<int> banned;
 	std::vector<pawns> player_pawn;
-	
+	std::vector<int> halt;
 	int emptyright(pawnmove right, int eatflag = 0);
 	int emptyleft(pawnmove right, int eatflag = 0);
 	bool borderleft(pawnmove left, int eatflag = 0);
 	bool borderright(pawnmove right, int eatflag = 0);
 	void olm(std::vector<path>& v, int idd);
+	bool statv(path & v);
 	bool mv(int idd, sf::Vector2i coor);
 	void deletepawn(int x);
 	void erazemove(int i);
-	bool rightright(pawnmove array_pawnn, bool first);
+	bool rightright(pawnmove array_pawnn, bool first,int direction=0,int fs=1);
 	bool pawn_rightright(pawnmove array_pawnn, bool first);
 	bool pawn_leftleft(pawnmove array_pawnn, bool first);
-	bool leftleft(pawnmove array_pawnn,  bool first);
+	bool leftleft(pawnmove array_pawnn,  bool first,int direction=0,int fs=1);
 	void increright(pawnmove & r);
 	void increleft(pawnmove & r);
 	void eatright(pawnmove & r);

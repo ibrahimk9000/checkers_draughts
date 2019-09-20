@@ -39,20 +39,26 @@ void player::status(player* opp)
 	//symmetry();
 	for (int i = 0; i < PAWN_NUMBER; ++i)
 	{
-		if (multieat > 0 && multieat != i)
-			continue;
+		int fb = 0;
+		if (multieat > 0)
+		{
+			if (multieat != i)
+				continue;
+			else
+				fb = pathmove.direction;
+		}
 		if ( player_pawn[i].struct_id().id < PAWN_NUMBER)
 		{
 			indexxx = i;
 			if (player_pawn[i].king == true)
 			{
-				rightright( player_pawn[i].struct_id(), true);
-				leftleft( player_pawn[i].struct_id(), true);
+				rightright( player_pawn[i].struct_id(), true,1,1+fb);
+				leftleft( player_pawn[i].struct_id(), true,2,2+fb);
 
 				magic = magic * (-1);
 
-				rightright( player_pawn[i].struct_id(), true);
-				leftleft( player_pawn[i].struct_id(), true);
+				rightright( player_pawn[i].struct_id(), true,-1,-1+fb);
+				leftleft( player_pawn[i].struct_id(), true,-2,-2+fb);
 				magic = magic * (-1);
 				
 
@@ -304,8 +310,11 @@ void player::erazemove(int index) {
 	player_pawn[i].path_pawn.clear(); 
 }
 	
-bool player::rightright(pawnmove array_pawnn,bool first_f )   
+bool player::rightright(pawnmove array_pawnn,bool first_f,int direction,int fs )   
 	{
+	if (first_f && fs == 0)
+		return false;
+
 	std::vector<int> nr = banned;
 	pawnmove beginpath = array_pawnn;
 	pawnmove cfour;
@@ -335,14 +344,14 @@ bool player::rightright(pawnmove array_pawnn,bool first_f )
 			if (eatormove)
 				break;
 
-		   player_pawn[indexxx].path_pawn.push_back(path{ beginpath,array_pawnn,holdid,beginpath,first,multi });
+		   player_pawn[indexxx].path_pawn.push_back(path{ beginpath,array_pawnn,holdid,beginpath,first,multi,direction });
 
 		   }
 
 		}
 
 		if (hold == true && save_move == true) 
-       	player_pawn[indexxx].path_pawn.push_back(path{ beginpath,array_pawnn,holdid ,cfour,first,multi });
+       	player_pawn[indexxx].path_pawn.push_back(path{ beginpath,array_pawnn,holdid ,cfour,first,multi,direction });
 
 		break;
 		}
@@ -367,7 +376,7 @@ bool player::rightright(pawnmove array_pawnn,bool first_f )
 			  if (first == true)
 				multi = true;
 
-				player_pawn[indexxx].path_pawn.push_back(path{ beginpath,array_pawnn,holdid,EMPTY_PAWNMOVE,first,multi });
+				player_pawn[indexxx].path_pawn.push_back(path{ beginpath,array_pawnn,holdid,EMPTY_PAWNMOVE,first,multi,direction });
 				beginpath = array_pawnn;
 				first = false;
 			}
@@ -388,7 +397,7 @@ bool player::rightright(pawnmove array_pawnn,bool first_f )
 					if (leftleft(array_pawnn, false) == true) {
 						if (first == true)
 							multi = true;
-						player_pawn[indexxx].path_pawn.push_back(path{ beginpath,array_pawnn,holdid,EMPTY_PAWNMOVE,first,multi });
+						player_pawn[indexxx].path_pawn.push_back(path{ beginpath,array_pawnn,holdid,EMPTY_PAWNMOVE,first,multi,direction });
 						save_move = false;
 						
 
@@ -400,7 +409,7 @@ bool player::rightright(pawnmove array_pawnn,bool first_f )
 							multi = true;
 						save_move = false;
 
-						player_pawn[indexxx].path_pawn.push_back(path{ beginpath,array_pawnn,holdid,EMPTY_PAWNMOVE,first,multi });
+						player_pawn[indexxx].path_pawn.push_back(path{ beginpath,array_pawnn,holdid,EMPTY_PAWNMOVE,first,multi,direction });
 						
 					}
 					magic = magic * (-1);
@@ -414,8 +423,11 @@ bool player::rightright(pawnmove array_pawnn,bool first_f )
 		}
 
 
-bool player::leftleft(pawnmove array_pawnn, bool first_f )
+bool player::leftleft(pawnmove array_pawnn, bool first_f ,int direction,int fs)
 {
+
+	if (first_f && fs == 0)
+		return false;
 	std::vector<int> nr = banned;
 	
 	
@@ -445,14 +457,14 @@ bool player::leftleft(pawnmove array_pawnn, bool first_f )
 					if (eatormove)
 						break;
 
-					player_pawn[indexxx].path_pawn.push_back(path{ beginpath,array_pawnn,holdid,beginpath,first,multi });
+					player_pawn[indexxx].path_pawn.push_back(path{ beginpath,array_pawnn,holdid,beginpath,first,multi,direction });
 				}
 			}
 
 			if (hold == true && save_move == true) 
 
 
-				player_pawn[indexxx].path_pawn.push_back(path{ beginpath,array_pawnn,holdid,cfour,first,multi });
+				player_pawn[indexxx].path_pawn.push_back(path{ beginpath,array_pawnn,holdid,cfour,first,multi,direction });
 
 			
 			break;
@@ -476,7 +488,7 @@ bool player::leftleft(pawnmove array_pawnn, bool first_f )
 
 				if (first == true)
 					multi = true;
-				player_pawn[indexxx].path_pawn.push_back(path{ beginpath,array_pawnn,holdid,EMPTY_PAWNMOVE,first,multi });
+				player_pawn[indexxx].path_pawn.push_back(path{ beginpath,array_pawnn,holdid,EMPTY_PAWNMOVE,first,multi,direction });
 				beginpath = array_pawnn;
 				first = false;
 			}
@@ -499,7 +511,7 @@ bool player::leftleft(pawnmove array_pawnn, bool first_f )
 					multi = true;
 				save_move = false;
 
-				player_pawn[indexxx].path_pawn.push_back(path{ beginpath,array_pawnn,holdid,EMPTY_PAWNMOVE,first,multi });
+				player_pawn[indexxx].path_pawn.push_back(path{ beginpath,array_pawnn,holdid,EMPTY_PAWNMOVE,first,multi,direction });
 			}
 
 
@@ -510,7 +522,7 @@ bool player::leftleft(pawnmove array_pawnn, bool first_f )
 					multi = true;
 				save_move = false;
 
-				player_pawn[indexxx].path_pawn.push_back(path{ beginpath,array_pawnn,holdid,EMPTY_PAWNMOVE,first,multi });
+				player_pawn[indexxx].path_pawn.push_back(path{ beginpath,array_pawnn,holdid,EMPTY_PAWNMOVE,first,multi,direction });
 
 				
 			}
