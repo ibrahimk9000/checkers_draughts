@@ -13,7 +13,7 @@ Game::Game():window(sf::VideoMode(800, 800), "Checkers", sf::Style::Close) {};
 bool Game::textureinit()
 {
 	try {
-		black_board_texture.init("black.png");    // load texture
+		black_board_texture.init("black.png");   s // load texture
 		white_board_texture.init("white.png");
 		border.init("frame.png");
 
