@@ -7,7 +7,6 @@
 const float G_xcord[8] = { 0.0f,100.0f,200.0f,300.0f,400.0f,500.0f,600.0f,700.0f };
 const float G_ycord[8] = { 0.0f,100.0f,200.f,300.0f,400.0f,500.0f,600.0f,700.0f };
 
-
 Game::Game():window(sf::VideoMode(800, 800), "Checkers", sf::Style::Close) {};
 
 bool Game::textureinit()
@@ -42,7 +41,6 @@ void Game::boardinit()
 		boardblack.push_back(board(0,i, &black_board_texture, &border));
 	}
 }
-
 
 void Game::playerinit()
 {

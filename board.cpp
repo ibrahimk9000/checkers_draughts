@@ -1,13 +1,8 @@
 #include "board.h"
 
-
-		
-
 //texture black_board_texture("black.png");    // load texture
 //texture white_board_texture("white.png");
 //texture border("frame.png");
-
-
 
 board::board(int clr,int id_loop,texture *tboard,texture *tborder):color(clr) {
 

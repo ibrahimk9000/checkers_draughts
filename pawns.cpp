@@ -3,14 +3,11 @@
 
 #include <cstdlib>
 
-
-
 //texture pawn_border("borderr.png");
 //texture red_texture("fire.png");
 //texture blue_texture("blue.png");
 //texture red_king_texture("fire_king.png");
 //texture blue_king_texture("blue_king.png");
-
 
 pawns::pawns(int redorblue, int loop_id, texture *gtpawn, texture *gtkpawn, texture *gtborder) 
 {
@@ -107,7 +104,6 @@ sf::Vector2i pawns::cord()
 {
 	return sf::Vector2i(id_cord.x, id_cord.y);
 }
-
 
 /*
 void pawns::symmetry()
