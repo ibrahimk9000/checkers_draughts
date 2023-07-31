@@ -1,11 +1,12 @@
 
 
-# spanish checker game
-spanish checker game (King can move any distance) using SFML library
+# Spanish checker game
+Spanish checker game  using SFML library.
+
+The King can move any distance.
 
 
-
-![GIF](https://github.com/ibrahimk9000/test/blob/master/deepin-screen-recorder_prog_2019.gif)
+![GIF](./scr.gif)
 
 
 
